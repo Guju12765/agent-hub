@@ -1,0 +1,10 @@
+{
+  "_comment": "Recommended plugins for this project",
+  "install_commands": [
+    "/plugin install superpowers@claude-plugins-official",
+    "/plugin install context7@claude-plugins-official",
+    "/plugin install claude-md-management@claude-plugins-official",
+    "/plugin install ralph-loop@claude-plugins-official",
+    "/plugin install github@claude-plugins-official"
+  ]
+}

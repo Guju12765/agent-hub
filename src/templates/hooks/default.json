@@ -1,0 +1,23 @@
+{
+  "_comment": "Default hooks for agent-hub. Injected into settings.json on hire.",
+
+  "SessionStart": [
+    {
+      "matcher": "*",
+      "hooks": [{
+        "type": "command",
+        "command": "echo \"[Memory] Memory available at .claude/memory/ (MEMORY.md, logs/, sessions/). Use /memory-summarization at PreCompact to save.\""
+      }],
+      "description": "Remind Claude about memory location"
+    }
+  ],
+
+  "PreCompact": [{
+    "matcher": "manual|auto",
+    "hooks": [{
+      "type": "command",
+      "command": "echo \"[Memory] Pre-compaction. Use /memory-summarization to save session state, daily learnings, and durable memories. If nothing to save, NO REPLY needed.\""
+    }],
+    "description": "Prompt Claude to save memories before compaction"
+  }]
+}
