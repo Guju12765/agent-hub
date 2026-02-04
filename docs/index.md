@@ -54,10 +54,11 @@ agent-hub hire alice
 
 ## What's Included
 
-Every agent comes with batteries included:
+Every agent comes with starter templates:
 
-- **3 Skills** - Coding standards, Python patterns, continuous learning
-- **8 Rules** - Security, testing, performance, git workflow, and more
-- **14 Subagents** - Code reviewer, architect, TDD guide, security reviewer...
-- **24 Commands** - `/plan`, `/code-review`, `/tdd`, `/verify`, and more
-- **Smart Hooks** - Auto-start observer, session logs, memory suggestions
+- **2 Skills** - Memory summarization, skill creator
+- **2 Rules** - Coding style, performance
+- **1 Command** - `/extract-session`
+- **2 Hooks** - Session start reminder, pre-compact memory prompt
+
+You can easily extend your agent by adding custom skills, rules, commands, and subagents.

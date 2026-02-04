@@ -20,100 +20,73 @@ Every new agent comes with a complete setup:
 ```
 ~/.agent-hub/agents/alice/
 ├── agent.json            # Metadata (name, specialty, version)
-├── IDENTITY.md           # Personality, tenets, principles
+├── CLAUDE.md             # Session guidelines and personality
 ├── MEMORY.md             # Persistent memory
-├── CLAUDE.md             # Session guidelines
+├── memory/               # Daily logs directory
+├── .index/               # Vector database
 ├── plugins.json          # Plugin dependencies
 ├── mcp-servers.json      # MCP server configs
-├── skills/               # 3 built-in skills
-│   ├── coding-standards/
-│   ├── python-patterns/
-│   └── continuous-learning-v2/
-├── hooks/                # 4 automation hooks
+├── skills/               # 2 starter skills
+│   ├── memory-summarization/
+│   └── skill-creator/
+├── hooks/                # Hook configurations
 │   └── default.json
-├── agents/               # 14 subagent definitions
-│   ├── architect.md
-│   ├── code-reviewer.md
-│   └── ...
-├── commands/             # 24 custom commands
-│   ├── plan.md
-│   ├── code-review.md
-│   └── ...
-├── rules/                # 8 coding rules
-│   ├── security.md
-│   ├── testing.md
-│   └── ...
+├── commands/             # Slash commands
+│   └── extract-session.md
+├── rules/                # Coding rules
+│   ├── coding-style.md
+│   └── performance.md
 └── scripts/              # Hook scripts
-    ├── hooks/
-    └── lib/
+    ├── extract-session.js
+    └── lib/utils.js
 ```
 
 ## Built-in Features
 
-### Skills (3)
+### Skills (2)
 
 | Skill | Description |
 |-------|-------------|
-| `coding-standards` | Best practices for code quality |
-| `python-patterns` | Python-specific patterns and idioms |
-| `continuous-learning-v2` | Auto-learning from your coding patterns |
+| `memory-summarization` | Save session state and memories at PreCompact |
+| `skill-creator` | Helper for creating new skills |
 
-### Rules (8)
+### Rules (2)
 
 | Rule | Purpose |
 |------|---------|
-| `security.md` | Security best practices |
-| `testing.md` | Testing guidelines |
+| `coding-style.md` | Code formatting and style guidelines |
 | `performance.md` | Performance considerations |
-| `git-workflow.md` | Git commit and branch rules |
-| `coding-style.md` | Code formatting and style |
-| `patterns.md` | Design patterns |
-| `hooks.md` | Hook development rules |
-| `agents.md` | Subagent guidelines |
 
-### Subagents (14)
-
-Ready-to-use specialist agents:
-
-- **Code Review**: `code-reviewer.md`, `security-reviewer.md`, `go-reviewer.md`, `python-reviewer.md`, `database-reviewer.md`
-- **Build/Test**: `build-error-resolver.md`, `go-build-resolver.md`, `e2e-runner.md`, `tdd-guide.md`
-- **Planning**: `architect.md`, `planner.md`
-- **Maintenance**: `doc-updater.md`, `refactor-cleaner.md`
-
-### Commands (24)
-
-Common workflows as slash commands:
+### Commands (1)
 
 | Command | Description |
 |---------|-------------|
-| `/plan` | Create implementation plans |
-| `/code-review` | Review code changes |
-| `/tdd` | Test-driven development workflow |
-| `/verify` | Verify changes before commit |
-| `/build-fix` | Fix build errors |
-| `/checkpoint` | Save progress checkpoint |
-| `/evolve` | Evolve instincts from observations |
+| `/extract-session` | Extract full session transcript to memory |
 
-[See full command list →](/commands/)
-
-### Hooks (4)
+### Hooks (2)
 
 Automation that runs at key moments:
 
 | Hook | Trigger | Purpose |
 |------|---------|---------|
-| Observer auto-start | SessionStart | Start the learning daemon |
-| Session logger | SessionEnd | Save session summary |
-| Pre-compact | PreCompact | Capture context before compaction |
-| Suggest compact | Notification | Suggest when to compact |
+| Session start reminder | SessionStart | Remind about memory location |
+| Pre-compact prompt | PreCompact | Prompt to save memories |
+
+### Extending Your Agent
+
+You can easily add more:
+- **Custom skills** - Create `.md` files in `skills/<skill-name>/`
+- **Custom rules** - Add `.md` files to `rules/`
+- **Custom commands** - Add `.md` files to `commands/`
+- **Subagents** - Add `.md` files to `agents/` (empty by default)
 
 ## Configure Your Agent
 
 Edit the files in `~/.agent-hub/agents/alice/`:
 
 ```bash
-# Edit identity and personality
-code ~/.agent-hub/agents/alice/IDENTITY.md
+# Edit session guidelines and personality
+code ~/.agent-hub/agents/alice/CLAUDE.md
 
 # Add MCP servers (filesystem, github, etc.)
 code ~/.agent-hub/agents/alice/mcp-servers.json
@@ -124,35 +97,27 @@ code ~/.agent-hub/agents/alice/rules/
 
 ## Key Files
 
-### IDENTITY.md
-
-Defines your agent's personality and principles:
-
-```markdown
-# Alice
-
-## Identity
-I am Alice, a Full-stack engineer...
-
-## Tenets
-1. Correctness over cleverness
-2. Ask before making significant changes
-
-## Memory
-**Recall:** Before answering, run memory_search first...
-**Save:** Durable facts → MEMORY.md, daily notes → memory/*.md
-```
-
 ### CLAUDE.md
 
-Session guidelines for memory continuity:
+Session guidelines, personality, and memory instructions:
 
 ```markdown
-## Every Session
-Before doing anything else:
-1. Read `sessions/YYYY-MM-DD-xxx-xxx-session.tmp` (recent 2-3)
-2. Read `memory/YYYY-MM-DD.md` (today + yesterday)
-3. Read `MEMORY.md` for long term memory
+# CLAUDE.md - Your Workspace
+
+## Core Truths
+- Be genuinely helpful, not performatively helpful
+- Have opinions
+- Be resourceful before asking
+
+## Memory
+| Tier | File | Purpose |
+|------|------|---------|
+| Long-term | memory/MEMORY.md | Curated wisdom, preferences |
+| Daily | memory/logs/YYYY-MM-DD.md | Daily learnings |
+| Session | memory/sessions/YYYY-MM-DD-HHmmss-{id}.md | Current state |
+
+**Recall:** Before answering, run memory_search...
+**Save:** At PreCompact, use /memory-summarization skill
 ```
 
 ### MEMORY.md

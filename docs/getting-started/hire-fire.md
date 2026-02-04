@@ -82,19 +82,30 @@ When Claude Code starts, the agent automatically:
 ### Memory Directory
 
 Project-local memory is stored at `.claude/memory/`:
-- `MEMORY.md` - Consolidated memory file
-- `logs/` - Session logs (auto-created on SessionEnd)
-- `.index/` - Vector index for semantic search
+- `MEMORY.md` - Consolidated long-term memory
+- `logs/` - Daily logs (YYYY-MM-DD.md)
+- `sessions/` - Session logs (YYYY-MM-DD-HHmmss-{id}.md)
+- `.index/` - Vector database for semantic search
 
-## Fire an Agent
+## Fire an Agent (Not Yet Implemented)
 
-Remove the agent from your project:
+> **Note:** The `fire` command is planned but not yet implemented.
 
-```bash
-npx agent-hub fire alice
+To manually remove an agent, delete or comment out the MCP server entry from `.mcp.json`:
+
+```json
+{
+  "mcpServers": {
+    // "alice": {
+    //   "type": "stdio",
+    //   "command": "npx",
+    //   "args": ["agent-hub", "--agent", "alice"]
+    // }
+  }
+}
 ```
 
-This removes the MCP configuration from `.mcp.json` but keeps all files in `.claude/`. You can re-hire anytime.
+This removes the MCP configuration but keeps all files in `.claude/`. You can re-hire anytime.
 
 ## Global vs Project
 

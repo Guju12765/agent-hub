@@ -21,13 +21,12 @@ agent-hub create <name> [options]
 npx agent-hub create alice -s "Full-stack engineer"
 ```
 
-Creates agent with default templates:
-- Skills (skill-creator, memory-summarization)
-- Rules (security, testing, performance, git-workflow, etc.)
-- Agents (code-reviewer, architect, tdd-guide, planner, etc.)
-- Commands (extract-session)
-- Hooks (SessionStart with memory recall)
-- MCP servers (memory server)
+Creates agent with starter templates:
+- Skills: memory-summarization, skill-creator
+- Rules: coding-style, performance
+- Commands: extract-session
+- Hooks: SessionStart reminder, PreCompact prompt
+- Scripts: extract-session.js, lib/utils.js
 
 ---
 
@@ -118,189 +117,33 @@ See [hire command documentation](../cli/hire.md) for full details on conflict re
 
 ---
 
-### fire
+---
+
+## Planned Commands
+
+The following commands are planned but not yet implemented:
+
+### fire (Planned)
 
 Remove an agent from the current project.
 
 ```bash
-npx agent-hub fire <name> [options]
+npx agent-hub fire <name>
 ```
 
-| Option | Description |
-|--------|-------------|
-| `-g, --global` | Remove from global settings |
+### Config Sync (Planned)
 
-**Example:**
-```bash
-npx agent-hub fire alice
-```
+- `agent-hub diff <name>` - Compare master vs project configurations
+- `agent-hub pull <name>` - Pull config updates from master to project
+- `agent-hub push <name>` - Push config changes from project to master
 
-This removes the MCP configuration but keeps all files in `.claude/`.
+### Sharing (Planned)
 
----
+- `agent-hub export <name>` - Export agent as archive
+- `agent-hub import <archive>` - Import agent from archive
+- `agent-hub clone <source> <target>` - Clone an existing agent
 
-### targets
-
-List available target platforms.
-
-```bash
-agent-hub targets
-```
-
-**Example output:**
-```
-Available targets:
-  claude    Claude Code         ✓ Supported
-  codex     Codex CLI           ○ Placeholder
-```
-
----
-
-## Config Sync
-
-### diff
-
-Compare master vs project configurations.
-
-```bash
-agent-hub diff <name>
-```
-
-Shows differences between `~/.agent-hub/agents/<name>/` and `.claude/` for skills, hooks, commands, rules.
-
----
-
-### pull
-
-Pull config updates from master to project.
-
-```bash
-agent-hub pull <name> [options]
-```
-
-| Option | Description |
-|--------|-------------|
-| `-f, --file <path>` | Pull specific file only |
-| `-a, --all` | Pull all changes without confirmation |
-
-**Examples:**
-```bash
-# Interactive pull
-agent-hub pull alice
-
-# Pull specific file
-agent-hub pull alice --file skills/code-review.md
-
-# Pull all without prompts
-agent-hub pull alice --all
-```
-
----
-
-### push
-
-Push config changes from project to master.
-
-```bash
-agent-hub push <name> [options]
-```
-
-| Option | Description |
-|--------|-------------|
-| `-f, --file <path>` | Push specific file only |
-| `-a, --all` | Push all changes without confirmation |
-
-**Examples:**
-```bash
-# Interactive push
-agent-hub push alice
-
-# Push specific file
-agent-hub push alice --file skills/new-skill.md
-```
-
----
-
-## Sharing
-
-### export
-
-Export an agent as a shareable archive.
-
-```bash
-agent-hub export <name> [options]
-```
-
-| Option | Description |
-|--------|-------------|
-| `-o, --output <dir>` | Output directory (default: current) |
-| `-m, --include-memory` | Include memory files |
-
-**Examples:**
-```bash
-# Export to current directory
-agent-hub export alice
-
-# Export to specific directory
-agent-hub export alice -o ~/exports/
-
-# Include memory
-agent-hub export alice --include-memory
-```
-
----
-
-### import
-
-Import an agent from an archive.
-
-```bash
-agent-hub import <archive> [options]
-```
-
-| Option | Description |
-|--------|-------------|
-| `-n, --name <name>` | Import with a different name |
-| `-f, --overwrite` | Overwrite if agent already exists |
-
-**Examples:**
-```bash
-# Import with original name
-agent-hub import alice.agent.tar.gz
-
-# Import with new name
-agent-hub import alice.agent.tar.gz --name alice-copy
-
-# Overwrite existing
-agent-hub import alice.agent.tar.gz --overwrite
-```
-
----
-
-### clone
-
-Clone an existing agent with a new name.
-
-```bash
-agent-hub clone <source> <target> [options]
-```
-
-| Option | Description |
-|--------|-------------|
-| `-s, --specialty <desc>` | New specialty description |
-| `-m, --include-memory` | Copy memory from source |
-
-**Examples:**
-```bash
-# Basic clone
-agent-hub clone alice alice-experimental
-
-# Clone with new specialty
-agent-hub clone alice alice-frontend -s "Frontend specialist"
-
-# Clone with memory
-agent-hub clone alice alice-backup --include-memory
-```
+See [Sharing documentation](/sharing/) for workarounds and details.
 
 ---
 
@@ -346,60 +189,31 @@ When the server runs, these tools are available:
 
 ## Built-in Slash Commands
 
-Every agent comes with 24 built-in slash commands:
+Every agent comes with default commands:
 
-### Planning & Architecture
-
-| Command | Description |
-|---------|-------------|
-| `/plan` | Create implementation plan (uses planner agent) |
-| `/orchestrate` | Coordinate multi-agent workflows |
-
-### Code Quality
+### Memory & Learning
 
 | Command | Description |
 |---------|-------------|
-| `/code-review` | Security and quality review of changes |
-| `/python-review` | Python-specific code review |
-| `/go-review` | Go-specific code review |
-| `/refactor-clean` | Refactoring assistance |
+| `/extract-session` | Extract full session transcript to memory |
+| `/memory-summarization` | Save session state and memories (triggered at PreCompact) |
 
-### Testing
+### Adding Custom Commands
 
-| Command | Description |
-|---------|-------------|
-| `/tdd` | Test-driven development workflow |
-| `/e2e` | End-to-end testing |
-| `/test-coverage` | Check test coverage |
-| `/verify` | Pre-commit verification |
+You can easily add custom commands by creating `.md` files in `~/.agent-hub/agents/<name>/commands/`:
 
-### Build & Fix
+```bash
+# Example: Create a custom command
+mkdir -p ~/.agent-hub/agents/alice/commands
+cat > ~/.agent-hub/agents/alice/commands/plan.md << 'EOF'
+# Plan Command
 
-| Command | Description |
-|---------|-------------|
-| `/build-fix` | Fix build errors |
-| `/go-build` | Go build assistance |
-| `/go-test` | Go test runner |
+Create implementation plans by:
+1. Analyzing requirements
+2. Breaking down into steps
+3. Identifying dependencies
+EOF
 
-### Documentation
-
-| Command | Description |
-|---------|-------------|
-| `/update-docs` | Update documentation |
-| `/update-codemaps` | Update code maps |
-
-### Learning & Memory
-
-| Command | Description |
-|---------|-------------|
-| `/extract-session` | Extract and summarize session logs |
-| `/checkpoint` | Save progress checkpoint |
-
-> **Note:** The continuous learning commands (`/evolve`, `/instinct-*`) have been archived. See `docs/archived-skills/continuous-learning-v2/` for details.
-
-### Utilities
-
-| Command | Description |
-|---------|-------------|
-| `/skill-create` | Create new skill |
-| `/eval` | Evaluate expressions |
+# After hiring the agent, use it with:
+# /plan
+```
