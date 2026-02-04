@@ -64,15 +64,16 @@ Provides memory tools to AI coding assistants:
 
 ## What You Get Out of the Box
 
-When you create an agent, you get:
+When you create an agent, you get starter templates:
 
 | Category | Count | Examples |
 |----------|-------|----------|
-| Skills | 3 | Coding standards, Python patterns, continuous learning |
-| Rules | 8 | Security, testing, performance, git workflow |
-| Subagents | 14 | Code reviewer, architect, TDD guide |
-| Commands | 24 | `/plan`, `/code-review`, `/tdd`, `/verify` |
-| Hooks | 4 | Observer auto-start, session logs, memory suggestions |
+| Skills | 2 | Memory summarization, skill creator |
+| Rules | 2 | Coding style, performance |
+| Commands | 1 | `/extract-session` |
+| Hooks | 2 | Session start reminder, pre-compact memory prompt |
+
+You can extend your agent by adding more skills, rules, commands, and subagents as needed.
 
 ## Not a Plugin
 
