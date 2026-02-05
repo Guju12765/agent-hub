@@ -69,7 +69,7 @@ When you create an agent, you get starter templates:
 
 | Category | Count | Examples |
 |----------|-------|----------|
-| Skills | 2 | Memory summarization, skill creator |
+| Skills | 3 | Memory summarization, skill creator, docs-map |
 | Rules | 2 | Coding style, performance |
 | Commands | 1 | `/extract-session` |
 | Hooks | 2 | Session start reminder, pre-compact memory prompt |

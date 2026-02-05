@@ -11,8 +11,10 @@ Navigation hub for all project documentation. Read this to find any doc quickly.
 ## Version Snapshots
 - [V0.1.0 Snapshot](snapshots/v0.1.0-SNAPSHOT.md) [CURRENT]
 
-## Architecture
-- (To add: architecture/system-design.md, architecture/data-flow.md)
+## Codemaps (Auto-generated)
+- [Architecture](codemaps/architecture.md) - Overall project structure
+- [Backend](codemaps/backend.md) - CLI and server modules
+- [Data](codemaps/data.md) - Memory and storage layer
 
 ## Features
 - (To add: features/ - feature specification docs)
@@ -70,7 +72,7 @@ Go to `api/`
 Go to `issues/`
 
 ### Understanding the architecture?
-Go to `architecture/`
+Go to `codemaps/` - auto-generated architecture docs
 
 ### Learning how to use?
 Go to VitePress [Getting Started](../docs/getting-started/)
@@ -78,5 +80,6 @@ Go to VitePress [Getting Started](../docs/getting-started/)
 ---
 
 ## Recent Updates
+- 2026-02-05: Generated codemaps (architecture, backend, data)
 - 2026-02-05: Enhanced VitePress docs section with structured table
 - 2026-02-05: Initialized docs map structure

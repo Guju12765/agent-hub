@@ -6,7 +6,7 @@ Agent Hub is an npm package that gives AI coding assistants like Claude Code a c
 ## Current Version Status
 - Version: v0.1.0
 - Last Updated: 2026-02-05
-- Git Commit: 48c667e
+- Git Commit: f159ad1
 - Work Phase: Development
 
 ## Quick Links
@@ -23,7 +23,7 @@ Agent Hub is an npm package that gives AI coding assistants like Claude Code a c
 Node.js + TypeScript + MCP SDK + SQLite + OpenAI
 
 ## Core Metrics
-- Total Code: ~3000 lines
+- Total Code: ~9400 lines
 - Modules: 9 (agent, cli, core, memory, server, storage, targets, templates, utils)
 
 ## Quick Start
