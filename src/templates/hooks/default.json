@@ -1,17 +1,5 @@
 {
   "_comment": "Default hooks for agent-hub. Injected into settings.json on hire.",
-
-  "SessionStart": [
-    {
-      "matcher": "*",
-      "hooks": [{
-        "type": "command",
-        "command": "echo \"[Memory] Memory available at .claude/memory/ (MEMORY.md, logs/, sessions/). Use /memory-summarization at PreCompact to save.\""
-      }],
-      "description": "Remind Claude about memory location"
-    }
-  ],
-
   "PreCompact": [{
     "matcher": "manual|auto",
     "hooks": [{
