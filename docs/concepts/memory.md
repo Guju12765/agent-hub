@@ -208,7 +208,7 @@ Changes to memory files are automatically re-indexed within ~1.5 seconds.
 
 ## Memory Guidelines
 
-The default IDENTITY.md includes memory guidelines:
+The default CLAUDE.md includes memory guidelines:
 
 **Recall:** Before answering about prior work, decisions, preferences:
 1. Run `memory_search` on relevant terms

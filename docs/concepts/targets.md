@@ -75,7 +75,14 @@ What gets injected:
       "matcher": "*",
       "hooks": [{
         "type": "command",
-        "command": "node .claude/skills/continuous-learning-v2/agents/start-observer.js start"
+        "command": "echo \"[Memory] Memory available at .claude/memory/\""
+      }]
+    }],
+    "PreCompact": [{
+      "matcher": "manual|auto",
+      "hooks": [{
+        "type": "command",
+        "command": "echo \"[Memory] Use /memory-summarization to save memories.\""
       }]
     }]
   }

@@ -14,25 +14,17 @@ Every agent comes with these pre-configured hooks:
     "matcher": "*",
     "hooks": [{
       "type": "command",
-      "command": "node .claude/skills/continuous-learning-v2/agents/start-observer.js start"
+      "command": "echo \"[Memory] Memory available at .claude/memory/ (MEMORY.md, logs/, sessions/). Use /memory-summarization at PreCompact to save.\""
     }],
-    "description": "Start observer daemon for continuous learning"
+    "description": "Remind Claude about memory location"
   }],
   "PreCompact": [{
     "matcher": "manual|auto",
     "hooks": [{
       "type": "command",
-      "command": "echo \"[Memory] Pre-compaction. Use /memory-summarization to save session state, daily learnings, and durable memories.\""
+      "command": "echo \"[Memory] Pre-compaction. Use /memory-summarization to save session state, daily learnings, and durable memories. If nothing to save, NO REPLY needed.\""
     }],
     "description": "Prompt Claude to save memories before compaction"
-  }],
-  "PreToolUse": [{
-    "matcher": "tool == \"Edit\" || tool == \"Write\"",
-    "hooks": [{
-      "type": "command",
-      "command": "node .claude/scripts/hooks/suggest-compact.js"
-    }],
-    "description": "Suggest compaction at logical intervals"
   }]
 }
 ```
@@ -43,13 +35,12 @@ Every agent comes with these pre-configured hooks:
 
 Runs when Claude Code session begins.
 
-**Default action:** Start the continuous learning observer daemon.
+**Default action:** Remind Claude about memory file locations.
 
-The observer:
-- Watches for code changes via `fs.watch()`
-- Records observations for pattern learning
-- Runs as singleton (one per project)
-- Persists across multiple sessions
+The reminder:
+- Points to `.claude/memory/` directory
+- Mentions MEMORY.md, logs, and sessions
+- Suggests using `/memory-summarization` at PreCompact
 
 ### PreCompact
 
@@ -93,7 +84,7 @@ When you run `agent-hub hire` (or `agent-hub hire --update`):
       "matcher": "*",
       "hooks": [{
         "type": "command",
-        "command": "node .claude/skills/continuous-learning-v2/agents/start-observer.js start"
+        "command": "echo \"[Memory] Memory available at .claude/memory/\""
       }]
     }],
     "PreCompact": [{
@@ -141,13 +132,12 @@ All hook scripts are Node.js for cross-platform compatibility:
 
 ```
 .claude/scripts/
-├── hooks/
-│   ├── session-end.js      # Session logging
-│   ├── pre-compact.js      # Pre-compaction capture
-│   └── suggest-compact.js  # Compaction suggestions
+├── extract-session.js      # Session extraction utility
 └── lib/
     └── utils.js            # Shared utilities
 ```
+
+The default hooks use simple `echo` commands rather than scripts. You can add custom hook scripts as needed.
 
 ## Writing Custom Hooks
 

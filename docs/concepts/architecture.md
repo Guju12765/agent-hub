@@ -21,22 +21,23 @@ Agent Hub uses a two-location architecture: **Master** (portable configuration) 
 └── agents/
     └── alice/
         ├── agent.json         # Metadata (name, version, specialty)
-        ├── IDENTITY.md        # Personality, tenets, principles
-        ├── CLAUDE.md          # Session guidelines
+        ├── CLAUDE.md          # Identity, tenets, principles, session guidelines
         ├── MEMORY.md          # Consolidated memory
         ├── memory/            # Daily logs (YYYY-MM-DD.md)
         │   └── .index/        # SQLite + vector embeddings
-        ├── skills/            # 3 default skills
-        │   ├── coding-standards/
-        │   ├── python-patterns/
-        │   └── continuous-learning-v2/
+        ├── skills/            # 2 default skills
+        │   ├── memory-summarization/
+        │   └── skill-creator/
         ├── hooks/             # Hook configurations
         │   └── default.json
-        ├── agents/            # 14 subagent definitions
-        ├── commands/          # 24 slash commands
-        ├── rules/             # 8 coding rules
-        ├── scripts/           # Hook scripts
-        │   ├── hooks/
+        ├── agents/            # Custom subagent definitions (empty by default)
+        ├── commands/          # 1 default command
+        │   └── extract-session.md
+        ├── rules/             # 2 default rules
+        │   ├── coding-style.md
+        │   └── performance.md
+        ├── scripts/           # Utility scripts
+        │   ├── extract-session.js
         │   └── lib/
         ├── plugins.json       # Plugin dependencies
         └── mcp-servers.json   # Additional MCP servers
@@ -58,10 +59,9 @@ your-project/
     ├── sessions/              # Session logs (project-level)
     │   └── 2026-01-31-abc123-session.tmp
     ├── skills/                # Copied from master
-    │   ├── coding-standards/
-    │   ├── python-patterns/
-    │   └── continuous-learning-v2/
-    ├── agents/                # Copied from master
+    │   ├── memory-summarization/
+    │   └── skill-creator/
+    ├── agents/                # Copied from master (empty by default)
     ├── commands/              # Copied from master
     ├── rules/                 # Copied from master
     └── scripts/               # Copied from master
@@ -102,10 +102,10 @@ Hooks are shell commands that run at specific moments:
 
 | Hook | When | Purpose |
 |------|------|---------|
-| `SessionStart` | Claude Code starts | Start observer daemon |
+| `SessionStart` | Claude Code starts | Remind about memory location |
+| `PreCompact` | Before context compaction | Prompt memory save |
 | `SessionEnd` | Session ends | Save session summary |
-| `PreCompact` | Before context compaction | Capture context |
-| `Notification` | Periodic | Suggest compaction |
+| `Notification` | Periodic | Custom notifications |
 
 Hooks are configured in `.claude/settings.json`:
 
@@ -116,7 +116,14 @@ Hooks are configured in `.claude/settings.json`:
       "matcher": "*",
       "hooks": [{
         "type": "command",
-        "command": "node .claude/skills/continuous-learning-v2/agents/start-observer.js start"
+        "command": "echo \"[Memory] Memory available at .claude/memory/\""
+      }]
+    }],
+    "PreCompact": [{
+      "matcher": "manual|auto",
+      "hooks": [{
+        "type": "command",
+        "command": "echo \"[Memory] Use /memory-summarization to save memories.\""
       }]
     }]
   }
