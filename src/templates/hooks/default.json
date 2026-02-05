@@ -3,8 +3,8 @@
   "PreCompact": [{
     "matcher": "manual|auto",
     "hooks": [{
-      "type": "command",
-      "command": "echo \"[Memory] Pre-compaction. Use /memory-summarization to save session state, daily learnings, and durable memories. If nothing to save, NO REPLY needed.\""
+      "type": "prompt",
+      "prompt": "[Memory] PreCompact triggered. Run /memory-summarization now to save session state, daily learnings, and durable memories before context is cleared."
     }],
     "description": "Prompt Claude to save memories before compaction"
   }]
