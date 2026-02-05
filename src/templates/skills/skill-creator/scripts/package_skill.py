@@ -11,8 +11,14 @@ Example:
 """
 
 import sys
+import io
 import zipfile
 from pathlib import Path
+
+# Fix Windows encoding for emoji support
+if sys.platform == 'win32':
+    sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding='utf-8', errors='replace')
+    sys.stderr = io.TextIOWrapper(sys.stderr.buffer, encoding='utf-8', errors='replace')
 from quick_validate import validate_skill
 
 

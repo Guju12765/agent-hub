@@ -84,7 +84,7 @@ Three-tier memory architecture:
 
 - **Short-term**: Session logs (`.claude/memory/sessions/*.md`)
 - **Mid-term**: Daily logs (`.claude/memory/logs/*.md`)
-- **Long-term**: Consolidated wisdom (`MEMORY.md`)
+- **Long-term**: Consolidated wisdom (`.claude/memory/MEMORY.md`)
 
 All memory is automatically indexed with vector embeddings for semantic search.
 
@@ -124,6 +124,19 @@ agent-hub delete <name>                # Delete agent
 agent-hub hire <name> [options]       # Deploy to project
 agent-hub hire <name> --update        # Update existing agent with conflict resolution
 ```
+
+### Conflict Resolution
+
+When re-hiring an agent with `--update`, you'll be prompted to handle file conflicts:
+
+- **Keep** - Keep your existing file
+- **Replace** - Use the agent's version
+- **Merge** - Open both in editor with conflict markers
+- **Diff** - Preview differences first
+
+Use `--force-keep` or `--force-replace` to skip prompts. Use `--dry-run` to preview changes.
+
+See [Hire Command](docs/cli/hire.md) for full documentation.
 
 ## Built-in Slash Commands
 
