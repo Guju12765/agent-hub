@@ -72,11 +72,17 @@ Periodic notifications during the session.
 
 ## How Hooks Get Applied
 
-When you run `agent-hub hire`:
+When you run `agent-hub hire` (or `agent-hub hire --update`):
 
 1. Reads `hooks/default.json` from master
-2. Merges with any existing hooks in `.claude/settings.json`
+2. **Auto-merges** with any existing hooks in `.claude/settings.json`
 3. Scripts are copied to `.claude/scripts/hooks/`
+
+**Hooks are auto-merged without prompts:**
+- New event types are added automatically
+- New hook commands are appended to existing event types
+- Duplicate hooks (same command) are detected and skipped
+- No interactive conflict resolution needed for hooks
 
 **Result in `.claude/settings.json`:**
 

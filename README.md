@@ -122,6 +122,7 @@ agent-hub delete <name>                # Delete agent
 
 ```bash
 agent-hub hire <name> [options]       # Deploy to project
+agent-hub hire <name> --update        # Update existing agent with conflict resolution
 ```
 
 ## Built-in Slash Commands

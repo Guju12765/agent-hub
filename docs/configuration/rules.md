@@ -6,18 +6,12 @@ Rules are coding guidelines that Claude follows during development.
 
 ## Default Rules
 
-Every agent comes with eight built-in rules:
+Every agent comes with two built-in rules:
 
 | Rule | Purpose |
 |------|---------|
-| `security.md` | Security best practices, vulnerability prevention |
-| `testing.md` | Testing guidelines, coverage requirements |
-| `performance.md` | Performance considerations, optimization patterns |
-| `git-workflow.md` | Git commit and branch conventions |
 | `coding-style.md` | Code formatting and style guidelines |
-| `patterns.md` | Design patterns and architecture |
-| `hooks.md` | Hook development guidelines |
-| `agents.md` | Subagent definition guidelines |
+| `performance.md` | Performance considerations, optimization patterns |
 
 ## Rule Format
 
@@ -48,25 +42,14 @@ Rules are markdown files with guidelines Claude should follow:
 
 ## Built-in Rules Detail
 
-### security.md
+### coding-style.md
 
 Covers:
-- Input validation
-- SQL injection prevention
-- XSS prevention
-- Authentication best practices
-- Secret management
-- Dependency security
-
-### testing.md
-
-Covers:
-- Test coverage targets (80%+ for most code)
-- Unit test structure
-- Integration test patterns
-- E2E test guidelines
-- Mock vs real implementations
-- Test naming conventions
+- Naming conventions
+- File organization
+- Import ordering
+- Comment guidelines
+- Formatting rules
 
 ### performance.md
 
@@ -77,49 +60,6 @@ Covers:
 - Async/await patterns
 - Bundle size considerations
 - Lazy loading
-
-### git-workflow.md
-
-Covers:
-- Commit message format
-- Branch naming conventions
-- PR guidelines
-- Merge strategies
-- Code review process
-
-### coding-style.md
-
-Covers:
-- Naming conventions
-- File organization
-- Import ordering
-- Comment guidelines
-- Formatting rules
-
-### patterns.md
-
-Covers:
-- Design patterns to use
-- Anti-patterns to avoid
-- Architecture guidelines
-- Dependency injection
-- Error handling patterns
-
-### hooks.md
-
-Covers:
-- Hook development guidelines
-- Cross-platform considerations
-- Testing hooks
-- Error handling in hooks
-
-### agents.md
-
-Covers:
-- Subagent definition format
-- Agent specialization
-- Inter-agent communication
-- Agent testing
 
 ## Adding Custom Rules
 
@@ -168,6 +108,20 @@ Master: ~/.agent-hub/agents/alice/rules/
     ↓
 Project: .claude/rules/
 ```
+
+### Updating Rules
+
+If you add new rules to the master and want to deploy them to an existing project:
+
+```bash
+# Update with conflict resolution
+agent-hub hire alice --update
+
+# Force replace all rules
+agent-hub hire alice --update --force-replace
+```
+
+When rule files conflict, you'll be prompted to keep, replace, merge, or diff each file.
 
 ## Rule Priority
 

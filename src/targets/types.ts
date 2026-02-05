@@ -85,8 +85,9 @@ export interface TargetAdapter {
    * @param agentName - The agent name
    * @param mcpConfig - Additional MCP servers to inject
    * @param global - If true, inject to global settings
+   * @returns Object with arrays of added and skipped server names
    */
-  injectMcp(agentName: string, mcpConfig: McpConfig, global: boolean): void;
+  injectMcp(agentName: string, mcpConfig: McpConfig, global: boolean): { added: string[]; skipped: string[] };
 
   /**
    * Inject hook configurations into settings

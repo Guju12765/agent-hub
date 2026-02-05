@@ -99,11 +99,11 @@ the project's history or previous decisions.
 
 ## How Identity Gets Applied
 
-When you run `agent-hub hire`:
+When you run `agent-hub hire` (or `agent-hub hire --update`):
 
-1. IDENTITY.md content is read from master
-2. Content is appended to CLAUDE.md in the project root
-3. A marker comment prevents duplicate additions
+1. CLAUDE.md is copied from master to project `.claude/CLAUDE.md`
+2. If CLAUDE.md already exists, you'll be prompted to keep, replace, merge, or diff
+3. Use `--force-replace` to always overwrite, `--force-keep` to never overwrite
 
 ```markdown
 <!-- Agent: alice -->

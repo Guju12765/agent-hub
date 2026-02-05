@@ -4,7 +4,7 @@
 
 import { parseArgs } from "node:util";
 import { existsSync, mkdirSync, copyFileSync, readdirSync, statSync, readFileSync } from "node:fs";
-import { join, basename } from "node:path";
+import { join, basename, dirname } from "node:path";
 import {
   agentExists,
   getMemoryDir,
@@ -20,10 +20,170 @@ import {
   getRuleFiles,
 } from "../../agent/index.js";
 import { claudeAdapter } from "../../targets/index.js";
-import { ConflictResolver, mergeHooks, hooksHaveConflict } from "../conflict-resolver.js";
+import { ConflictResolver, mergeHooks, hooksHaveConflict, type ConflictAction } from "../conflict-resolver.js";
 
 /**
- * Copy agent's CLAUDE.md to .claude/CLAUDE.md if it doesn't exist
+ * Result of a copy operation with conflict resolution
+ */
+export interface CopyResult {
+  action: ConflictAction | "copied";
+  copied: boolean;
+}
+
+/**
+ * Copy a single file with conflict resolution
+ * Exported for testing
+ */
+export async function copyConfigFile(
+  sourcePath: string,
+  targetPath: string,
+  resolver: ConflictResolver
+): Promise<CopyResult> {
+  // Ensure target directory exists
+  const targetDir = dirname(targetPath);
+  if (!existsSync(targetDir)) {
+    mkdirSync(targetDir, { recursive: true });
+  }
+
+  if (!existsSync(targetPath)) {
+    copyFileSync(sourcePath, targetPath);
+    return { action: "copied", copied: true };
+  }
+
+  // File exists - use resolver
+  const action = await resolver.handleConflict(targetPath, sourcePath, "file");
+  if (action === "abort") {
+    throw new Error("Hire operation aborted by user");
+  }
+  if (action === "replace") {
+    copyFileSync(sourcePath, targetPath);
+    return { action: "replace", copied: true };
+  }
+  return { action, copied: false };
+}
+
+/**
+ * Copy CLAUDE.md with conflict resolution
+ * Exported for testing
+ */
+export async function copyClaudeMd(
+  sourcePath: string,
+  targetPath: string,
+  resolver: ConflictResolver
+): Promise<CopyResult> {
+  return copyConfigFile(sourcePath, targetPath, resolver);
+}
+
+/**
+ * Copy plugins.json with conflict resolution
+ * Exported for testing
+ */
+export async function copyPluginsJson(
+  sourcePath: string,
+  targetPath: string,
+  resolver: ConflictResolver
+): Promise<CopyResult> {
+  return copyConfigFile(sourcePath, targetPath, resolver);
+}
+
+/**
+ * Recursively copy a directory with per-file conflict resolution
+ * Exported for testing
+ */
+export async function copyDirWithConflictResolution(
+  src: string,
+  dest: string,
+  resolver: ConflictResolver
+): Promise<{ action: ConflictAction | "copied"; filesProcessed: number }> {
+  if (!existsSync(dest)) {
+    mkdirSync(dest, { recursive: true });
+  }
+
+  const entries = readdirSync(src, { withFileTypes: true });
+  let filesProcessed = 0;
+
+  for (const entry of entries) {
+    const srcPath = join(src, entry.name);
+    const destPath = join(dest, entry.name);
+
+    if (entry.isDirectory()) {
+      // Recurse into subdirectory
+      const result = await copyDirWithConflictResolution(srcPath, destPath, resolver);
+      filesProcessed += result.filesProcessed;
+    } else {
+      // Handle file with conflict resolution
+      if (!existsSync(destPath)) {
+        copyFileSync(srcPath, destPath);
+        filesProcessed++;
+      } else {
+        const action = await resolver.handleConflict(destPath, srcPath, "file");
+        if (action === "abort") {
+          throw new Error("Hire operation aborted by user");
+        }
+        if (action === "replace") {
+          copyFileSync(srcPath, destPath);
+        }
+        filesProcessed++;
+      }
+    }
+  }
+
+  return { action: "copied", filesProcessed };
+}
+
+/**
+ * Copy scripts directory with conflict resolution
+ * Exported for testing
+ */
+export async function copyScriptsDir(
+  sourcePath: string,
+  targetPath: string,
+  resolver: ConflictResolver
+): Promise<CopyResult> {
+  if (!existsSync(sourcePath)) {
+    return { action: "keep", copied: false };
+  }
+
+  if (!existsSync(targetPath)) {
+    // No conflict - copy entire directory
+    copyDirRecursiveSimple(sourcePath, targetPath);
+    return { action: "copied", copied: true };
+  }
+
+  // Directory exists - ask resolver at directory level
+  const action = await resolver.handleConflict(targetPath, sourcePath, "skill-dir");
+  if (action === "abort") {
+    throw new Error("Hire operation aborted by user");
+  }
+  if (action === "replace") {
+    // Use per-file conflict resolution when replacing
+    await copyDirWithConflictResolution(sourcePath, targetPath, resolver);
+    return { action: "replace", copied: true };
+  }
+  return { action, copied: false };
+}
+
+/**
+ * Simple recursive directory copy (no conflict resolution)
+ * Used when target doesn't exist
+ */
+function copyDirRecursiveSimple(src: string, dest: string): void {
+  mkdirSync(dest, { recursive: true });
+  const entries = readdirSync(src, { withFileTypes: true });
+  for (const entry of entries) {
+    const srcPath = join(src, entry.name);
+    const destPath = join(dest, entry.name);
+    if (entry.isDirectory()) {
+      copyDirRecursiveSimple(srcPath, destPath);
+    } else {
+      copyFileSync(srcPath, destPath);
+    }
+  }
+}
+
+/**
+ * Legacy function - kept for backward compatibility
+ * @deprecated Use copyClaudeMd with resolver instead
  */
 function copyClaudeMdFromMaster(agentName: string, settingsDir: string): boolean {
   const projectClaudeMd = join(settingsDir, "CLAUDE.md");
@@ -174,6 +334,7 @@ export async function hireCommand(args: string[]): Promise<void> {
       "dry-run": { type: "boolean" },
       "force-keep": { type: "boolean" },
       "force-replace": { type: "boolean" },
+      update: { type: "boolean", short: "u" },
     },
     allowPositionals: true,
   });
@@ -188,6 +349,7 @@ export async function hireCommand(args: string[]): Promise<void> {
     console.error("  --dry-run             Show what would be copied without making changes");
     console.error("  --force-keep          Keep existing files, skip conflicts");
     console.error("  --force-replace       Replace all conflicting files");
+    console.error("  --update, -u          Update existing agent (re-hire with conflict resolution)");
     process.exit(1);
   }
 
@@ -216,8 +378,10 @@ export async function hireCommand(args: string[]): Promise<void> {
   }
 
   // Check if already hired in project (for non-global hires)
-  if (!values.global && isAgentHiredInProject()) {
+  // Allow re-hire with --update flag
+  if (!values.global && isAgentHiredInProject() && !values.update) {
     console.log(`Agent ${name} is already hired in this project.`);
+    console.log(`Use --update to update agent files with conflict resolution.`);
     return;
   }
 
@@ -239,14 +403,23 @@ export async function hireCommand(args: string[]): Promise<void> {
         initializeProjectMemory();
       }
 
-      // Copy CLAUDE.md from master to .claude/CLAUDE.md if it doesn't exist
-      if (!isDryRun && copyClaudeMdFromMaster(name, settingsDir)) {
-        console.log("Created .claude/CLAUDE.md from agent template.");
-      } else if (isDryRun) {
-        const projectClaudeMd = join(settingsDir, "CLAUDE.md");
-        const masterClaudeMd = getAgentClaudeMdPath(name);
-        if (!existsSync(projectClaudeMd) && existsSync(masterClaudeMd)) {
-          console.log("Would create .claude/CLAUDE.md from agent template.");
+      // Copy CLAUDE.md with conflict resolution
+      const masterClaudeMd = getAgentClaudeMdPath(name);
+      const projectClaudeMd = join(settingsDir, "CLAUDE.md");
+      if (existsSync(masterClaudeMd)) {
+        if (!isDryRun) {
+          const claudeMdResult = await copyClaudeMd(masterClaudeMd, projectClaudeMd, resolver);
+          if (claudeMdResult.action === "copied") {
+            console.log("Created .claude/CLAUDE.md from agent template.");
+          } else if (claudeMdResult.action === "replace") {
+            console.log("Replaced .claude/CLAUDE.md with agent template.");
+          }
+        } else {
+          if (!existsSync(projectClaudeMd)) {
+            console.log("Would create .claude/CLAUDE.md from agent template.");
+          } else {
+            console.log("Would conflict: CLAUDE.md (already exists)");
+          }
         }
       }
 
@@ -262,19 +435,23 @@ export async function hireCommand(args: string[]): Promise<void> {
         console.log(`${isDryRun ? "Would copy" : "Copied"} ${totalCopied} config files.`);
       }
 
-      // Copy scripts directory
+      // Copy scripts directory with conflict resolution
       const scriptsSource = getScriptsDir(name);
       const scriptsTarget = join(settingsDir, "scripts");
       if (existsSync(scriptsSource)) {
-        if (!existsSync(scriptsTarget)) {
-          if (!isDryRun) {
-            copyDirRecursive(scriptsSource, scriptsTarget);
+        if (!isDryRun) {
+          const scriptsResult = await copyScriptsDir(scriptsSource, scriptsTarget, resolver);
+          if (scriptsResult.action === "copied") {
             console.log("Copied scripts directory.");
-          } else {
-            console.log("Would copy scripts directory.");
+          } else if (scriptsResult.action === "replace") {
+            console.log("Updated scripts directory.");
           }
-        } else if (isDryRun) {
-          console.log("Would conflict: scripts directory (already exists)");
+        } else {
+          if (!existsSync(scriptsTarget)) {
+            console.log("Would copy scripts directory.");
+          } else {
+            console.log("Would conflict: scripts directory (already exists)");
+          }
         }
       }
     }
@@ -282,7 +459,10 @@ export async function hireCommand(args: string[]): Promise<void> {
     // Load and inject MCP servers
     const mcpConfig = loadMcpServersConfig(name);
     if (!isDryRun) {
-      adapter.injectMcp(name, { servers: mcpConfig.servers }, !!values.global);
+      const mcpResult = adapter.injectMcp(name, { servers: mcpConfig.servers }, !!values.global);
+      if (mcpResult.skipped.length > 0) {
+        console.log(`Note: MCP servers already configured (skipped): ${mcpResult.skipped.join(", ")}`);
+      }
     } else {
       console.log(`Would inject ${Object.keys(mcpConfig.servers).length} MCP servers.`);
     }
@@ -310,14 +490,23 @@ export async function hireCommand(args: string[]): Promise<void> {
       console.log(`Would inject ${Object.keys(hooksConfig).length} hook event types.`);
     }
 
-    // Copy plugins.json to .claude/ as reference
+    // Copy plugins.json with conflict resolution
     const pluginsSource = getPluginsConfigPath(name);
     const pluginsTarget = join(settingsDir, "plugins.json");
-    if (existsSync(pluginsSource) && !existsSync(pluginsTarget)) {
+    if (existsSync(pluginsSource)) {
       if (!isDryRun) {
-        copyFileSync(pluginsSource, pluginsTarget);
+        const pluginsResult = await copyPluginsJson(pluginsSource, pluginsTarget, resolver);
+        if (pluginsResult.action === "copied") {
+          console.log("Copied plugins.json to .claude/");
+        } else if (pluginsResult.action === "replace") {
+          console.log("Updated plugins.json in .claude/");
+        }
       } else {
-        console.log("Would copy plugins.json to .claude/");
+        if (!existsSync(pluginsTarget)) {
+          console.log("Would copy plugins.json to .claude/");
+        } else {
+          console.log("Would conflict: plugins.json (already exists)");
+        }
       }
     }
 

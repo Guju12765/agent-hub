@@ -24,7 +24,7 @@ features:
     details: Built-in instinct system learns from your coding patterns. Your agent gets smarter over time.
   - icon: 🔧
     title: Skills & Commands
-    details: 24+ built-in commands, coding standards, and specialized subagents ready to use out of the box.
+    details: Built-in skills for memory management, coding rules, and slash commands. Easily extensible with your own.
   - icon: 🎯
     title: Multi-Platform
     details: Deploy to Claude Code, Codex CLI, and more with target adapters. Cross-platform Node.js.
@@ -48,6 +48,9 @@ agent-hub create alice -s "Full-stack engineer"
 # Deploy to your project
 cd your-project
 agent-hub hire alice
+
+# Update agent later with new files
+agent-hub hire alice --update
 
 # Restart Claude Code - agent is active!
 ```

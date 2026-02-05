@@ -6,40 +6,7 @@ Subagents are specialized AI assistants that Claude can delegate tasks to.
 
 ## Default Subagents
 
-Every agent comes with 14 built-in subagents:
-
-### Code Review
-
-| Agent | Purpose |
-|-------|---------|
-| `code-reviewer.md` | General code quality review |
-| `security-reviewer.md` | Security-focused review |
-| `go-reviewer.md` | Go-specific review |
-| `python-reviewer.md` | Python-specific review |
-| `database-reviewer.md` | Database/SQL review |
-
-### Build & Test
-
-| Agent | Purpose |
-|-------|---------|
-| `build-error-resolver.md` | Fix build errors |
-| `go-build-resolver.md` | Go build issues |
-| `e2e-runner.md` | End-to-end test execution |
-| `tdd-guide.md` | Test-driven development |
-
-### Planning & Architecture
-
-| Agent | Purpose |
-|-------|---------|
-| `architect.md` | System design and architecture |
-| `planner.md` | Implementation planning |
-
-### Maintenance
-
-| Agent | Purpose |
-|-------|---------|
-| `doc-updater.md` | Documentation updates |
-| `refactor-cleaner.md` | Code refactoring |
+The `agents/` directory is empty by default. You can add your own custom subagents as needed.
 
 ## Subagent Format
 
@@ -177,7 +144,7 @@ Provide:
 
 When you run `agent-hub hire`:
 
-1. Agent files copied from master to project
+1. Subagent files copied from master to project
 2. Available immediately in `.claude/agents/`
 
 ```
@@ -185,6 +152,20 @@ Master: ~/.agent-hub/agents/alice/agents/
     ↓
 Project: .claude/agents/
 ```
+
+### Updating Subagents
+
+If you add new subagents to the master and want to deploy them to an existing project:
+
+```bash
+# Update with conflict resolution
+agent-hub hire alice --update
+
+# Force replace all subagents
+agent-hub hire alice --update --force-replace
+```
+
+When subagent files conflict, you'll be prompted to keep, replace, merge, or diff each file.
 
 ## Best Practices
 

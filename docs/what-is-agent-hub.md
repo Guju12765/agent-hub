@@ -61,6 +61,7 @@ Provides memory tools to AI coding assistants:
 2. **Configure** by editing files in `~/.agent-hub/agents/<name>/`
 3. **Hire** into a project with `agent-hub hire`
 4. **Use** - Claude Code automatically connects to the memory server
+5. **Update** with `agent-hub hire --update` when you add new skills
 
 ## What You Get Out of the Box
 

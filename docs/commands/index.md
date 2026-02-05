@@ -94,6 +94,7 @@ npx agent-hub hire <name> [options]
 | Option | Description |
 |--------|-------------|
 | `-g, --global` | Add to global settings instead of project |
+| `-u, --update` | Update existing agent (re-hire with conflict resolution) |
 | `--dry-run` | Show what would be copied without making changes |
 | `--force-keep` | Keep existing files, skip conflicts |
 | `--force-replace` | Replace all conflicting files |
@@ -103,14 +104,17 @@ npx agent-hub hire <name> [options]
 # Hire for this project (interactive conflict resolution)
 npx agent-hub hire alice
 
+# Update an already-hired agent with new files
+npx agent-hub hire alice --update
+
 # Preview changes before installing
 npx agent-hub hire alice --dry-run
 
 # Hire globally
 npx agent-hub hire alice --global
 
-# Force replace all conflicts
-npx agent-hub hire alice --force-replace
+# Force replace all conflicts during update
+npx agent-hub hire alice --update --force-replace
 ```
 
 See [hire command documentation](../cli/hire.md) for full details on conflict resolution.
