@@ -1,35 +1,23 @@
-import { describe, it, expect, beforeEach, afterEach } from "vitest";
-import { mkdirSync, rmSync } from "node:fs";
-import { join } from "node:path";
-import { tmpdir } from "node:os";
-import { readCachedIndex, writeCachedIndex } from "./cache.js";
-import { resolveAssetPath } from "./fetch.js";
+import { describe, it, expect } from "vitest";
+import { readIndex } from "./cache.js";
+import { resolveAssetPath, getRegistryPath } from "./fetch.js";
+import { existsSync } from "node:fs";
 import type { RegistryEntry } from "../agent/types.js";
 
-const TEST_DIR = join(tmpdir(), "agent-hub-test-registry");
-
-beforeEach(() => {
-  mkdirSync(TEST_DIR, { recursive: true });
-});
-
-afterEach(() => {
-  rmSync(TEST_DIR, { recursive: true, force: true });
-});
-
-describe("cache", () => {
-  it("reads and writes index", () => {
-    const entries: RegistryEntry[] = [
-      { name: "debugging", type: "skill", description: "Debug workflows" },
-    ];
-    const indexPath = join(TEST_DIR, "index.json");
-    writeCachedIndex(indexPath, entries);
-    const result = readCachedIndex(indexPath);
-    expect(result).toEqual(entries);
+describe("readIndex", () => {
+  it("reads the bundled registry index", () => {
+    const entries = readIndex();
+    expect(entries.length).toBeGreaterThan(0);
+    expect(entries[0]).toHaveProperty("name");
+    expect(entries[0]).toHaveProperty("type");
+    expect(entries[0]).toHaveProperty("description");
   });
+});
 
-  it("returns empty array for missing index", () => {
-    const result = readCachedIndex(join(TEST_DIR, "missing.json"));
-    expect(result).toEqual([]);
+describe("getRegistryPath", () => {
+  it("points to an existing directory", () => {
+    const path = getRegistryPath();
+    expect(existsSync(path)).toBe(true);
   });
 });
 

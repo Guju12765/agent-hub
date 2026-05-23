@@ -1,11 +1,10 @@
 /**
- * Fetch assets from the GitHub registry
+ * Registry asset resolution
  */
 
-import { execSync } from "node:child_process";
-import { existsSync, mkdirSync } from "node:fs";
+import { join, dirname } from "node:path";
+import { fileURLToPath } from "node:url";
 import type { RegistryEntry } from "../agent/types.js";
-import { getCachedRegistryPath } from "../agent/paths.js";
 
 const TYPE_TO_DIR: Record<string, string> = {
   skill: "skills",
@@ -15,32 +14,22 @@ const TYPE_TO_DIR: Record<string, string> = {
   agent: "agents",
 };
 
+/** Get the bundled registry path (ships with the package) */
+export function getRegistryPath(): string {
+  const thisFile = dirname(fileURLToPath(import.meta.url));
+  // src/registry/ -> registry/ (dev) or dist/registry/ -> registry/ (installed)
+  return join(thisFile, "..", "..", "registry");
+}
+
 /** Resolve the registry path for an asset entry */
 export function resolveAssetPath(entry: RegistryEntry): string {
   const dir = TYPE_TO_DIR[entry.type];
   return `${dir}/${entry.name}`;
 }
 
-/** Clone or update the registry repo */
-export function syncRegistry(registryUrl: string): string {
-  const localPath = getCachedRegistryPath();
-
-  if (existsSync(localPath)) {
-    execSync("git pull --ff-only", { cwd: localPath, stdio: "pipe" });
-  } else {
-    const parent = localPath.substring(0, localPath.lastIndexOf("/") || localPath.lastIndexOf("\\"));
-    if (!existsSync(parent)) {
-      mkdirSync(parent, { recursive: true });
-    }
-    execSync(`git clone --depth 1 "${registryUrl}" "${localPath}"`, { stdio: "pipe" });
-  }
-
-  return localPath;
-}
-
-/** Get the local filesystem path for an asset in the cached registry */
+/** Get the local filesystem path for an asset in the registry */
 export function getAssetLocalPath(entry: RegistryEntry): string {
-  const registryPath = getCachedRegistryPath();
+  const registryPath = getRegistryPath();
   const assetPath = resolveAssetPath(entry);
-  return `${registryPath}/${assetPath}`;
+  return join(registryPath, assetPath);
 }

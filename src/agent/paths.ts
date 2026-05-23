@@ -11,26 +11,6 @@ export function getBaseDir(): string {
   return join(homedir(), ".agent-hub");
 }
 
-/** Global config path */
-export function getConfigPath(): string {
-  return join(getBaseDir(), "config.json");
-}
-
-/** Registry cache directory */
-export function getCacheDir(): string {
-  return join(getBaseDir(), "cache");
-}
-
-/** Cached registry index path */
-export function getCachedIndexPath(): string {
-  return join(getCacheDir(), "index.json");
-}
-
-/** Cached registry repo path */
-export function getCachedRegistryPath(): string {
-  return join(getCacheDir(), "registry");
-}
-
 /** Agents directory */
 export function getAgentsDir(): string {
   return join(getBaseDir(), "agents");
@@ -48,7 +28,7 @@ export function agentExists(name: string): boolean {
 
 /** Ensure base directories exist */
 export function ensureDirs(): void {
-  const dirs = [getBaseDir(), getCacheDir(), getAgentsDir()];
+  const dirs = [getBaseDir(), getAgentsDir()];
   for (const dir of dirs) {
     if (!existsSync(dir)) {
       mkdirSync(dir, { recursive: true });

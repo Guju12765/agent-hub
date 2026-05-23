@@ -1,26 +1,19 @@
 /**
- * Local cache for registry index
+ * Registry index reader
  */
 
-import { existsSync, readFileSync, writeFileSync, mkdirSync } from "node:fs";
-import { dirname } from "node:path";
+import { existsSync, readFileSync } from "node:fs";
+import { join } from "node:path";
 import type { RegistryEntry } from "../agent/types.js";
+import { getRegistryPath } from "./fetch.js";
 
-/** Read cached registry index */
-export function readCachedIndex(path: string): RegistryEntry[] {
-  if (!existsSync(path)) return [];
+/** Read the registry index */
+export function readIndex(): RegistryEntry[] {
+  const indexPath = join(getRegistryPath(), "index.json");
+  if (!existsSync(indexPath)) return [];
   try {
-    return JSON.parse(readFileSync(path, "utf-8"));
+    return JSON.parse(readFileSync(indexPath, "utf-8"));
   } catch {
     return [];
   }
-}
-
-/** Write registry index to cache */
-export function writeCachedIndex(path: string, entries: RegistryEntry[]): void {
-  const dir = dirname(path);
-  if (!existsSync(dir)) {
-    mkdirSync(dir, { recursive: true });
-  }
-  writeFileSync(path, JSON.stringify(entries, null, 2));
 }
