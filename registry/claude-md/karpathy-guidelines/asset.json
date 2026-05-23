@@ -1,7 +1,8 @@
 {
-  "name": "andrej-karpathy-skills",
-  "type": "dependency",
+  "name": "karpathy-guidelines",
+  "type": "claude-md",
   "description": "Behavioral guidelines from Andrej Karpathy — think before coding, simplicity first, surgical changes",
   "version": "1.0.0",
-  "author": "multica-ai"
+  "author": "multica-ai",
+  "source": "https://github.com/multica-ai/andrej-karpathy-skills"
 }
