@@ -1,28 +1,26 @@
 /**
- * Agents command - List all agents
+ * agent-hub agents — List local agents
  */
 
-import { listAgents } from "../../agent/index.js";
+import { listAgents } from "../../agent/manager.js";
 
 export async function agentsCommand(_args: string[]): Promise<void> {
   const agents = listAgents();
 
   if (agents.length === 0) {
-    console.log("No agents found.");
-    console.log("");
-    console.log("Create one with:");
-    console.log('  npx agent-hub create <name> --specialty "description"');
+    console.log("No agents created yet. Use 'agent-hub create' to create one.");
     return;
   }
 
-  console.log("Available agents:\n");
-
+  console.log("Your agents:\n");
   for (const agent of agents) {
     console.log(`  ${agent.name}`);
-    if (agent.specialty) {
-      console.log(`    ${agent.specialty}`);
+    if (agent.assets.length > 0) {
+      console.log(`    Assets: ${agent.assets.join(", ")}`);
     }
-    console.log(`    Created: ${agent.created.split("T")[0]}`);
-    console.log("");
+    if (agent.created) {
+      console.log(`    Created: ${agent.created}`);
+    }
+    console.log();
   }
 }

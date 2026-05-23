@@ -1,47 +1,36 @@
 #!/usr/bin/env node
 /**
- * Agent Hub CLI - Manage agents and their memory
- *
- * Commands:
- *   create <name>      Create a new agent
- *   agents             List all agents
- *   status [name]      Show agent status
- *   hire <name>        Add agent to current project
- *   fire <name>        Remove agent from current project
- *   delete <name>      Delete an agent
+ * Agent Hub CLI — AI Development Kit
  */
 
+import { listCommand } from "./commands/list.js";
 import { createCommand } from "./commands/create.js";
+import { addCommand } from "./commands/add.js";
+import { removeCommand } from "./commands/remove.js";
+import { deployCommand } from "./commands/deploy.js";
 import { agentsCommand } from "./commands/agents.js";
-import { statusCommand } from "./commands/status.js";
-import { hireCommand } from "./commands/hire.js";
-import { deleteCommand } from "./commands/delete.js";
+import { infoCommand } from "./commands/info.js";
 
 const HELP = `
-Agent Hub CLI - Agent configuration, deployment, and sharing center
+Agent Hub — AI Development Kit
 
 Usage:
-  npx agent-hub <command> [options]
+  agent-hub <command> [options]
 
 Commands:
-  create <name>         Create a new agent
-    --specialty, -s     Agent specialty description
-
-  agents                List all agents
-
-  status [name]         Show agent status and memory stats
-
-  hire <name>           Add agent to current project's config
-    --global, -g        Add to global settings instead of project
-
-  delete <name>         Permanently delete an agent and all memory
-    --force, -f         Skip confirmation
+  list                          Browse available assets and agents
+  info <name>                   Show details about an asset or agent
+  create <agent> [assets...]    Create agent from selected assets
+  add <agent> [assets...]       Add assets to an existing agent
+  remove <agent> [assets...]    Remove assets from an agent
+  agents                        List your local agents
+  deploy <agent>                Deploy agent to current project
 
 Examples:
-  npx agent-hub create alice-fullstack -s "Full-stack AI engineer"
-  npx agent-hub agents
-  npx agent-hub hire alice-fullstack
-  npx agent-hub status alice-fullstack
+  agent-hub list
+  agent-hub create my-agent debugging tdd coding-style senior-engineer
+  agent-hub add my-agent qmd
+  agent-hub deploy my-agent
 `;
 
 async function main() {
@@ -53,7 +42,7 @@ async function main() {
   }
 
   if (args[0] === "--version" || args[0] === "-v") {
-    console.log("0.1.0");
+    console.log("0.2.0");
     process.exit(0);
   }
 
@@ -62,31 +51,30 @@ async function main() {
 
   try {
     switch (command) {
+      case "list":
+        await listCommand(commandArgs);
+        break;
+      case "info":
+        await infoCommand(commandArgs);
+        break;
       case "create":
         await createCommand(commandArgs);
         break;
-
+      case "add":
+        await addCommand(commandArgs);
+        break;
+      case "remove":
+        await removeCommand(commandArgs);
+        break;
       case "agents":
-      case "list":
         await agentsCommand(commandArgs);
         break;
-
-      case "status":
-        await statusCommand(commandArgs);
+      case "deploy":
+        await deployCommand(commandArgs);
         break;
-
-      case "hire":
-        await hireCommand(commandArgs);
-        break;
-
-      case "delete":
-      case "remove":
-        await deleteCommand(commandArgs);
-        break;
-
       default:
         console.error(`Unknown command: ${command}`);
-        console.error("Run 'npx agent-hub --help' for usage.");
+        console.error("Run 'agent-hub --help' for usage.");
         process.exit(1);
     }
   } catch (err) {

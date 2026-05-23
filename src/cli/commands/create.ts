@@ -1,39 +1,22 @@
 /**
- * Create command - Create a new agent
+ * agent-hub create <agent> [assets...] — Create a new agent
  */
 
-import { parseArgs } from "node:util";
-import { createAgent } from "../../agent/index.js";
+import { createAgent } from "../../agent/manager.js";
 
 export async function createCommand(args: string[]): Promise<void> {
-  const { values, positionals } = parseArgs({
-    args,
-    options: {
-      specialty: { type: "string", short: "s" },
-    },
-    allowPositionals: true,
-  });
-
-  const name = positionals[0];
-
-  if (!name) {
-    console.error("Usage: npx agent-hub create <name> [--specialty <desc>]");
-    console.error("");
-    console.error("Examples:");
-    console.error('  npx agent-hub create alice-fullstack');
-    console.error('  npx agent-hub create alice-fullstack -s "Full-stack AI engineer"');
+  if (args.length === 0) {
+    console.error("Usage: agent-hub create <agent-name> [assets...]");
     process.exit(1);
   }
 
-  const metadata = createAgent(name, {
-    specialty: values.specialty,
-  });
+  const [name, ...assets] = args;
+  const manifest = createAgent(name, assets);
 
-  console.log(`Created agent: ${metadata.name}`);
-  if (metadata.specialty) {
-    console.log(`Specialty: ${metadata.specialty}`);
+  console.log(`Created agent "${manifest.name}"`);
+  if (manifest.assets.length > 0) {
+    console.log(`Assets: ${manifest.assets.join(", ")}`);
+  } else {
+    console.log("No assets added. Use 'agent-hub add' to add assets.");
   }
-  console.log("");
-  console.log(`To use this agent in a project:`);
-  console.log(`  npx agent-hub hire ${name}`);
 }
