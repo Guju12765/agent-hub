@@ -11,6 +11,7 @@ npx agent-hub hire <name> [options]
 ## Options
 
 - `--global, -g` - Add to global settings instead of project
+- `--update, -u` - Update existing agent (re-hire with conflict resolution)
 - `--dry-run` - Show what would be copied without making changes
 - `--force-keep` - Keep existing files, skip conflicts
 - `--force-replace` - Replace all conflicting files
@@ -254,10 +255,32 @@ The agent is now available in Claude Code.
 Restart Claude Code to activate the agent.
 ```
 
-### Re-Hiring with Conflicts
+### Update Existing Agent
+
+If an agent is already hired in your project and you want to update its files (e.g., after the agent was updated with new skills), use `--update`:
+
+```bash
+$ npx agent-hub hire alice --update
+
+Conflict: CLAUDE.md already exists
+  [K]eep existing    [R]eplace with agent's
+  [M]erge in editor  [D]iff first
+  [S]kip for now     [A]bort hire
+Choice: m
+```
+
+Without `--update`, you'll see:
 
 ```bash
 $ npx agent-hub hire alice
+Agent alice is already hired in this project.
+Use --update to update agent files with conflict resolution.
+```
+
+### Re-Hiring with Conflicts
+
+```bash
+$ npx agent-hub hire alice --update
 
 Conflict: memory-summarization.md already exists
   [K]eep existing    [R]eplace with agent's

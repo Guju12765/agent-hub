@@ -127,9 +127,14 @@ export class ClaudeAdapter implements TargetAdapter {
     };
   }
 
-  injectMcp(agentName: string, mcpConfig: McpConfig, global: boolean): void {
+  /**
+   * Result of MCP injection with skip info
+   */
+  injectMcp(agentName: string, mcpConfig: McpConfig, global: boolean): { added: string[]; skipped: string[] } {
     const mcpPath = this.getMcpConfigPath(global);
     const config = loadMcpConfig(mcpPath);
+    const added: string[] = [];
+    const skipped: string[] = [];
 
     if (!config.mcpServers) {
       config.mcpServers = {};
@@ -150,16 +155,23 @@ export class ClaudeAdapter implements TargetAdapter {
             command: "npx",
             args: ["agent-hub", "--agent", agentName],
           };
+      added.push(agentName);
+    } else {
+      skipped.push(agentName);
     }
 
     // Add additional MCP servers from config
     for (const [serverName, serverConfig] of Object.entries(mcpConfig.servers)) {
       if (!config.mcpServers[serverName]) {
         config.mcpServers[serverName] = serverConfig;
+        added.push(serverName);
+      } else {
+        skipped.push(serverName);
       }
     }
 
     saveMcpConfig(mcpPath, config);
+    return { added, skipped };
   }
 
   injectHooks(hooksConfig: HooksConfig, global: boolean): void {

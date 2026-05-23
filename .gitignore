@@ -4,3 +4,6 @@ dist/
 .DS_Store
 docs/.vitepress/cache/
 .worktrees/
+.claude/settings.local.json
+.claude/memory/
+__pycache__/

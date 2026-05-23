@@ -125,19 +125,47 @@ Use `--dry-run` to see what will be installed:
 npx agent-hub hire alice --dry-run
 ```
 
+## Updating an Existing Agent
+
+If an agent is already hired and you want to update its files (e.g., after adding new skills to the master agent), use `--update`:
+
+```bash
+# Update agent with conflict resolution
+npx agent-hub hire alice --update
+```
+
+Without `--update`, you'll see:
+```
+Agent alice is already hired in this project.
+Use --update to update agent files with conflict resolution.
+```
+
 ## Conflict Resolution
 
-When re-hiring or updating an agent, conflicts may occur. The hire command provides interactive resolution:
+When hiring or updating an agent, conflicts may occur if files already exist. The hire command provides interactive resolution:
 
 ```bash
 # Interactive mode (default) - prompts for each conflict
-npx agent-hub hire alice
+npx agent-hub hire alice --update
 
 # Keep existing files - never overwrite
-npx agent-hub hire alice --force-keep
+npx agent-hub hire alice --update --force-keep
 
 # Replace all conflicts - always overwrite
-npx agent-hub hire alice --force-replace
+npx agent-hub hire alice --update --force-replace
 ```
+
+**Files with conflict resolution:**
+- CLAUDE.md
+- Skills (with per-file resolution inside directories)
+- Commands
+- Rules
+- Agents/subagents
+- Scripts directory
+- plugins.json
+
+**Files auto-merged (no prompt):**
+- Hooks - automatically merged, duplicates skipped
+- MCP servers - skipped with notification if already configured
 
 See the [hire command documentation](../cli/hire.md) for full details on conflict resolution options.

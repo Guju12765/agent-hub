@@ -55,7 +55,7 @@ export default defineConfig({
       {
         text: 'Configuration',
         items: [
-          { text: 'Identity', link: '/configuration/identity' },
+          { text: 'CLAUDE.md', link: '/configuration/identity' },
           { text: 'Skills', link: '/configuration/skills' },
           { text: 'Rules', link: '/configuration/rules' },
           { text: 'Subagents', link: '/configuration/agents' },

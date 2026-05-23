@@ -6,55 +6,38 @@ Skills are reusable knowledge packages that extend your agent's capabilities.
 
 ## Default Skills
 
-Every agent comes with three built-in skills:
+Every agent comes with two built-in skills:
 
-### 1. coding-standards
+### 1. memory-summarization
 
-Best practices for code quality across languages.
+Save session state and memories at PreCompact.
 
-**Location:** `skills/coding-standards/SKILL.md`
+**Location:** `skills/memory-summarization/SKILL.md`
 
-Covers:
-- Naming conventions
-- Code organization
-- Error handling
-- Documentation standards
-- Performance considerations
+Used by the PreCompact hook to prompt saving:
+- Session logs (current state, progress, decisions)
+- Daily logs (timestamped learnings)
+- MEMORY.md updates (durable facts and preferences)
 
-### 2. python-patterns
+### 2. skill-creator
 
-Python-specific patterns and idioms.
+Helper for creating new skills.
 
-**Location:** `skills/python-patterns/SKILL.md`
-
-Covers:
-- Pythonic code style
-- Common patterns (context managers, decorators, generators)
-- Type hints and annotations
-- Testing patterns
-- Package structure
-
-### 3. continuous-learning-v2
-
-Automatic learning from your coding patterns.
-
-**Location:** `skills/continuous-learning-v2/`
+**Location:** `skills/skill-creator/`
 
 Structure:
 ```
-continuous-learning-v2/
-├── SKILL.md              # Documentation
-├── config.json           # Configuration
-├── agents/
-│   ├── observer.md       # Observer agent
-│   └── start-observer.js # Startup script
-├── hooks/
-│   └── observe.js        # Observation hook
+skill-creator/
+├── SKILL.md                    # Documentation
+├── LICENSE.txt                 # License template
+├── references/
+│   ├── output-patterns.md      # Output format examples
+│   └── workflows.md            # Workflow patterns
 └── scripts/
-    └── instinct-cli.js   # CLI tool
+    ├── init_skill.py           # Initialize new skill
+    ├── package_skill.py        # Package for sharing
+    └── quick_validate.py       # Validate skill structure
 ```
-
-See [Continuous Learning](/concepts/continuous-learning) for details.
 
 ## Skill Structure
 
@@ -137,6 +120,20 @@ Master: ~/.agent-hub/agents/alice/skills/
     ↓
 Project: .claude/skills/
 ```
+
+### Updating Skills
+
+If you add new skills to the master and want to deploy them to an existing project:
+
+```bash
+# Update with conflict resolution
+agent-hub hire alice --update
+
+# Force replace all skills
+agent-hub hire alice --update --force-replace
+```
+
+When skill directories conflict, you'll be prompted to keep, replace, merge, or diff. If you choose replace, each file inside the skill directory is checked individually - so you can keep your customizations to specific files while updating others.
 
 ## Skill Discovery
 

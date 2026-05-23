@@ -43,12 +43,13 @@ Every new agent comes with a complete setup:
 
 ## Built-in Features
 
-### Skills (2)
+### Skills (3)
 
 | Skill | Description |
 |-------|-------------|
 | `memory-summarization` | Save session state and memories at PreCompact |
 | `skill-creator` | Helper for creating new skills |
+| `docs-map` | Generate Three-Layer Pyramid documentation structure |
 
 ### Rules (2)
 

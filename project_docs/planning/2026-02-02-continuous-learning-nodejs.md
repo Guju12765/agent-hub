@@ -1,5 +1,7 @@
 # Continuous Learning v2 Node.js Conversion Plan
 
+> **STATUS: NOT IMPLEMENTED** - This plan describes a feature that was never built. The continuous-learning-v2 skill does not exist in the current codebase. This document is preserved for historical reference only.
+
 > **For Claude:** REQUIRED SUB-SKILL: Use superpowers:executing-plans to implement this plan task-by-task.
 
 **Goal:** Convert all bash/python scripts in continuous-learning-v2 to cross-platform Node.js for Windows compatibility.

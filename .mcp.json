@@ -1,0 +1,15 @@
+{
+  "mcpServers": {
+    "alice": {
+      "type": "stdio",
+      "command": "cmd",
+      "args": [
+        "/c",
+        "npx",
+        "agent-hub",
+        "--agent",
+        "alice"
+      ]
+    }
+  }
+}
