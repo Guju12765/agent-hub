@@ -67,5 +67,12 @@ export function listAgents(): AgentManifest[] {
 
   return readdirSync(dir)
     .filter((f) => f.endsWith(".json"))
-    .map((f) => JSON.parse(readFileSync(join(dir, f), "utf-8")));
+    .map((f) => {
+      try {
+        return JSON.parse(readFileSync(join(dir, f), "utf-8"));
+      } catch {
+        return null;
+      }
+    })
+    .filter((m): m is AgentManifest => m !== null && typeof m.name === "string" && Array.isArray(m.assets));
 }

@@ -2,9 +2,8 @@
  * agent-hub info <name> — Show asset or agent details
  */
 
-import { readCachedIndex } from "../../registry/cache.js";
-import { getCachedIndexPath, getCachedRegistryPath } from "../../agent/paths.js";
-import { resolveAssetPath } from "../../registry/fetch.js";
+import { readIndex } from "../../registry/cache.js";
+import { getRegistryPath, resolveAssetPath } from "../../registry/fetch.js";
 import { existsSync, readFileSync } from "node:fs";
 import { join } from "node:path";
 
@@ -15,12 +14,7 @@ export async function infoCommand(args: string[]): Promise<void> {
   }
 
   const name = args[0];
-  const index = readCachedIndex(getCachedIndexPath());
-
-  if (index.length === 0) {
-    console.error("Registry not cached. Run 'agent-hub list' first.");
-    process.exit(1);
-  }
+  const index = readIndex();
 
   const entry = index.find((e) => e.name === name);
   if (!entry) {
@@ -32,8 +26,7 @@ export async function infoCommand(args: string[]): Promise<void> {
   console.log(`Type:        ${entry.type}`);
   console.log(`Description: ${entry.description}`);
 
-  // Try to show content from cached registry
-  const registryPath = getCachedRegistryPath();
+  const registryPath = getRegistryPath();
   const assetDir = join(registryPath, resolveAssetPath(entry));
 
   if (entry.type === "agent") {

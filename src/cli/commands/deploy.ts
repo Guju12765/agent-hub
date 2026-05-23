@@ -4,7 +4,7 @@
 
 import { agentExists } from "../../agent/paths.js";
 import { loadAgent } from "../../agent/manager.js";
-import { getCachedRegistryPath } from "../../agent/paths.js";
+import { getRegistryPath } from "../../registry/fetch.js";
 import { deployAgent } from "../../deploy/index.js";
 import { existsSync, readFileSync } from "node:fs";
 import { join } from "node:path";
@@ -26,7 +26,7 @@ export async function deployCommand(args: string[]): Promise<void> {
     manifest = loadAgent(name);
   } else {
     // Check registry for pre-made agent
-    const registryPath = getCachedRegistryPath();
+    const registryPath = getRegistryPath();
     const agentJsonPath = join(registryPath, "agents", name, "agent.json");
 
     if (existsSync(agentJsonPath)) {

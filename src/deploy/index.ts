@@ -5,19 +5,19 @@
 import { existsSync, readFileSync } from "node:fs";
 import { join } from "node:path";
 import type { AgentManifest } from "../agent/types.js";
-import { readCachedIndex } from "../registry/cache.js";
-import { getCachedIndexPath, getCachedRegistryPath } from "../agent/paths.js";
+import { readIndex } from "../registry/cache.js";
+import { getRegistryPath } from "../registry/fetch.js";
 import { copyAssetToProject } from "./copy.js";
 import { loadDependencyConfig, installDependency, toMcpEntry } from "./dependencies.js";
 import { claudeAdapter } from "../targets/claude.js";
 
 /** Deploy an agent's assets to the current project */
 export async function deployAgent(manifest: AgentManifest, projectDir: string): Promise<void> {
-  const index = readCachedIndex(getCachedIndexPath());
-  const registryPath = getCachedRegistryPath();
+  const index = readIndex();
+  const registryPath = getRegistryPath();
 
   if (index.length === 0) {
-    throw new Error("Registry not cached. Run 'agent-hub list' first to fetch the registry.");
+    throw new Error("No assets found in registry.");
   }
 
   console.log(`Deploying agent "${manifest.name}" to ${projectDir}...`);

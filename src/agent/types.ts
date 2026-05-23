@@ -39,9 +39,3 @@ export interface DependencyConfig {
     env?: Record<string, string>;
   };
 }
-
-/** Global config (~/.agent-hub/config.json) */
-export interface GlobalConfig {
-  registryUrl: string;
-  defaultTarget: string;
-}
