@@ -1,0 +1,4 @@
+{
+  "install": "claude plugin install andrej-karpathy-skills@claude-plugins-official",
+  "source": "https://github.com/multica-ai/andrej-karpathy-skills"
+}

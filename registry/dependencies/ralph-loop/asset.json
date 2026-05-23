@@ -1,0 +1,7 @@
+{
+  "name": "ralph-loop",
+  "type": "dependency",
+  "description": "Ralph Wiggum technique — continuous self-referential AI loops for iterative development",
+  "version": "1.0.0",
+  "author": "anthropic"
+}

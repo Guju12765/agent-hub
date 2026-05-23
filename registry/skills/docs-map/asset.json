@@ -1,0 +1,7 @@
+{
+  "name": "docs-map",
+  "type": "skill",
+  "description": "Three-Layer Pyramid documentation structure for optimized context recovery",
+  "version": "1.0.0",
+  "author": "agent-hub"
+}

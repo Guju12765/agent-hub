@@ -13,8 +13,11 @@ Navigation hub for all project documentation. Read this to find any doc quickly.
 
 ## Codemaps (Auto-generated)
 - [Architecture](codemaps/architecture.md) - Overall project structure
-- [Backend](codemaps/backend.md) - CLI and server modules
-- [Data](codemaps/data.md) - Memory and storage layer
+- [Backend](codemaps/backend.md) - CLI, agent, targets, storage, utils modules
+
+## Planning
+- [TODO](planning/TODO.md)
+- Design docs (24 files) - Implementation plans and designs
 
 ## Features
 - (To add: features/ - feature specification docs)
@@ -27,10 +30,6 @@ Navigation hub for all project documentation. Read this to find any doc quickly.
 
 ## Guides
 - (To add: guides/ - how-to guides)
-
-## Planning
-- [TODO](planning/TODO.md)
-- Design docs (24 files) - Implementation plans and designs
 
 ## Issues
 - (To add: issues/ - bug tracking docs)
@@ -53,26 +52,18 @@ User-facing documentation built with VitePress:
 | [Commands](../docs/commands/) | 1 | Built-in commands |
 | [Sharing](../docs/sharing/) | 1 | Export/import agents |
 
-Key pages:
-- [What is Agent Hub](../docs/what-is-agent-hub.md) - Overview and introduction
-- [Memory System](../docs/concepts/memory.md) - Three-tier memory architecture
-- [Hire Command](../docs/cli/hire.md) - Deployment and conflict resolution
-
 ---
 
 ## By Scenario
 
+### Need to understand the architecture?
+Go to `codemaps/` - auto-generated architecture docs
+
 ### Need to understand a feature?
 Go to `features/` or VitePress docs
 
-### Need API details?
-Go to `api/`
-
 ### Fixing a bug?
 Go to `issues/`
-
-### Understanding the architecture?
-Go to `codemaps/` - auto-generated architecture docs
 
 ### Learning how to use?
 Go to VitePress [Getting Started](../docs/getting-started/)
@@ -80,6 +71,6 @@ Go to VitePress [Getting Started](../docs/getting-started/)
 ---
 
 ## Recent Updates
+- 2026-05-23: Updated codemaps and docs after archiving memory system, server, and templates
 - 2026-02-05: Generated codemaps (architecture, backend, data)
-- 2026-02-05: Enhanced VitePress docs section with structured table
 - 2026-02-05: Initialized docs map structure

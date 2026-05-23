@@ -1,158 +1,71 @@
 /**
- * Agent Manager - Create, list, and manage agents
- *
- * Note: Memory storage is now handled by the memory module via MemoryManager.
- * This module only manages agent metadata and directories.
+ * Agent CRUD operations
  */
 
-import { rmSync } from "node:fs";
-import type { AgentMetadata } from "./types.js";
-import {
-  getAgentDir,
-  agentExists,
-  loadRegistry,
-  saveRegistry,
-  loadAgentMetadata,
-  saveAgentMetadata,
-  ensureAgentDirs,
-  getIndexDbPath,
-} from "./paths.js";
-import { createDefaultTemplates } from "./templates.js";
+import { existsSync, readFileSync, writeFileSync, unlinkSync, readdirSync } from "node:fs";
+import { join } from "node:path";
+import { getAgentPath, getAgentsDir, agentExists, ensureDirs } from "./paths.js";
+import type { AgentManifest } from "./types.js";
 
-export interface CreateAgentOptions {
-  specialty?: string;
-}
-
-export interface AgentInfo {
-  name: string;
-  specialty?: string;
-  created: string;
-}
-
-/**
- * Create a new agent
- */
-export function createAgent(name: string, options: CreateAgentOptions = {}): AgentMetadata {
-  // Validate name
-  if (!/^[a-z0-9-]+$/.test(name)) {
-    throw new Error(
-      `Invalid agent name: "${name}". Use lowercase letters, numbers, and hyphens only.`
-    );
-  }
+/** Create a new agent with selected assets */
+export function createAgent(name: string, assets: string[]): AgentManifest {
+  ensureDirs();
 
   if (agentExists(name)) {
-    throw new Error(`Agent "${name}" already exists.`);
+    throw new Error(`Agent "${name}" already exists`);
   }
 
-  // Create metadata
-  const metadata: AgentMetadata = {
+  const manifest: AgentManifest = {
     name,
-    specialty: options.specialty,
-    created: new Date().toISOString(),
-    version: "1.0.0",
+    assets,
+    created: new Date().toISOString().split("T")[0],
   };
 
-  // Create directories and files
-  ensureAgentDirs(name);
-  saveAgentMetadata(name, metadata);
-  createDefaultTemplates(name);
-
-  // Add to registry
-  const registry = loadRegistry();
-  if (!registry.agents.includes(name)) {
-    registry.agents.push(name);
-    registry.agents.sort();
-    saveRegistry(registry);
-  }
-
-  return metadata;
+  writeFileSync(getAgentPath(name), JSON.stringify(manifest, null, 2));
+  return manifest;
 }
 
-/**
- * Delete an agent
- */
+/** Load an agent manifest */
+export function loadAgent(name: string): AgentManifest {
+  const path = getAgentPath(name);
+  if (!existsSync(path)) {
+    throw new Error(`Agent "${name}" not found`);
+  }
+  return JSON.parse(readFileSync(path, "utf-8"));
+}
+
+/** Add assets to an existing agent */
+export function addAssets(name: string, assets: string[]): AgentManifest {
+  const manifest = loadAgent(name);
+  const newAssets = assets.filter((a) => !manifest.assets.includes(a));
+  const updated: AgentManifest = { ...manifest, assets: [...manifest.assets, ...newAssets] };
+  writeFileSync(getAgentPath(name), JSON.stringify(updated, null, 2));
+  return updated;
+}
+
+/** Remove assets from an agent */
+export function removeAssets(name: string, assets: string[]): AgentManifest {
+  const manifest = loadAgent(name);
+  const updated: AgentManifest = { ...manifest, assets: manifest.assets.filter((a) => !assets.includes(a)) };
+  writeFileSync(getAgentPath(name), JSON.stringify(updated, null, 2));
+  return updated;
+}
+
+/** Delete an agent */
 export function deleteAgent(name: string): void {
-  if (!agentExists(name)) {
-    throw new Error(`Agent "${name}" does not exist.`);
+  const path = getAgentPath(name);
+  if (!existsSync(path)) {
+    throw new Error(`Agent "${name}" not found`);
   }
-
-  // Remove directory
-  const agentDir = getAgentDir(name);
-  rmSync(agentDir, { recursive: true, force: true });
-
-  // Update registry
-  const registry = loadRegistry();
-  registry.agents = registry.agents.filter(a => a !== name);
-  if (registry.defaultAgent === name) {
-    delete registry.defaultAgent;
-  }
-  saveRegistry(registry);
+  unlinkSync(path);
 }
 
-/**
- * List all agents
- */
-export function listAgents(): AgentInfo[] {
-  const registry = loadRegistry();
-  const agents: AgentInfo[] = [];
+/** List all local agents */
+export function listAgents(): AgentManifest[] {
+  const dir = getAgentsDir();
+  if (!existsSync(dir)) return [];
 
-  for (const name of registry.agents) {
-    const metadata = loadAgentMetadata(name);
-    if (metadata) {
-      agents.push({
-        name: metadata.name,
-        specialty: metadata.specialty,
-        created: metadata.created,
-      });
-    }
-  }
-
-  return agents;
-}
-
-/**
- * Get agent info
- */
-export function getAgentInfo(name: string): AgentInfo | null {
-  const metadata = loadAgentMetadata(name);
-  if (!metadata) {
-    return null;
-  }
-
-  return {
-    name: metadata.name,
-    specialty: metadata.specialty,
-    created: metadata.created,
-  };
-}
-
-/**
- * Set default agent
- */
-export function setDefaultAgent(name: string): void {
-  if (!agentExists(name)) {
-    throw new Error(`Agent "${name}" does not exist.`);
-  }
-
-  const registry = loadRegistry();
-  registry.defaultAgent = name;
-  saveRegistry(registry);
-}
-
-/**
- * Get default agent name
- */
-export function getDefaultAgent(): string | undefined {
-  const registry = loadRegistry();
-  return registry.defaultAgent;
-}
-
-/**
- * Get agent's index database path
- */
-export function getAgentDbPath(name: string): string {
-  if (!agentExists(name)) {
-    throw new Error(`Agent "${name}" does not exist.`);
-  }
-  return getIndexDbPath(name);
+  return readdirSync(dir)
+    .filter((f) => f.endsWith(".json"))
+    .map((f) => JSON.parse(readFileSync(join(dir, f), "utf-8")));
 }

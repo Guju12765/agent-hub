@@ -1,0 +1,27 @@
+[
+  {
+    "name": "docs-map",
+    "type": "skill",
+    "description": "Three-Layer Pyramid documentation structure for optimized context recovery"
+  },
+  {
+    "name": "superpowers",
+    "type": "dependency",
+    "description": "Complete software development methodology — TDD, debugging, planning, code review, and more"
+  },
+  {
+    "name": "andrej-karpathy-skills",
+    "type": "dependency",
+    "description": "Behavioral guidelines from Andrej Karpathy — think before coding, simplicity first, surgical changes"
+  },
+  {
+    "name": "grillme",
+    "type": "dependency",
+    "description": "Interview skill — stress-test plans and designs through relentless questioning"
+  },
+  {
+    "name": "ralph-loop",
+    "type": "dependency",
+    "description": "Ralph Wiggum technique — continuous self-referential AI loops for iterative development"
+  }
+]

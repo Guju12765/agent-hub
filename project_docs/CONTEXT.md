@@ -1,13 +1,13 @@
 # Project Context Index v1.0
 
 ## Project Summary
-Agent Hub is an npm package that gives AI coding assistants like Claude Code a consistent identity, persistent memory, and a toolkit of best practices. Instead of starting fresh every session, your assistant remembers your preferences, past decisions, and project context.
+Agent Hub is a CLI tool for managing AI coding assistant configurations. It handles agent creation, deployment ("hiring") into projects, and conflict resolution for config files. Agents bundle settings, skills, rules, commands, and hooks that get deployed to project `.claude/` directories.
 
 ## Current Version Status
 - Version: v0.1.0
-- Last Updated: 2026-02-05
-- Git Commit: f159ad1
-- Work Phase: Development
+- Last Updated: 2026-05-23
+- Git Commit: 72f09d6
+- Work Phase: Development (major refactor in progress)
 
 ## Quick Links
 - [Docs Map](DOCS-MAP.md)
@@ -15,16 +15,13 @@ Agent Hub is an npm package that gives AI coding assistants like Claude Code a c
 - [Changelog](CHANGELOG.md)
 - [TODO](planning/TODO.md)
 
-## Documentation
-- User docs: `docs/` (VitePress) - 45+ pages
-- Dev docs: `project_docs/` (Three-Layer Pyramid)
-
 ## Tech Stack
-Node.js + TypeScript + MCP SDK + SQLite + OpenAI
+Node.js + TypeScript (CLI-only, no server)
 
 ## Core Metrics
-- Total Code: ~9400 lines
-- Modules: 9 (agent, cli, core, memory, server, storage, targets, templates, utils)
+- Total Code: ~3,400 lines across 25 files
+- Active Modules: 5 (agent, cli, storage, targets, utils)
+- Archived: memory system, MCP server, default templates, core config
 
 ## Quick Start
 ```bash
@@ -32,5 +29,6 @@ npm run dev
 ```
 
 ## Current Focus
-- [ ] Documentation - improve docs coverage
-- [ ] Testing - increase test coverage
+- [ ] Archiving outdated systems (memory, server, templates)
+- [ ] Simplifying to CLI-only architecture
+- [ ] Updating documentation post-refactor

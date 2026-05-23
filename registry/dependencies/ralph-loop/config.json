@@ -1,0 +1,4 @@
+{
+  "install": "claude plugin install ralph-wiggum@claude-plugins-official",
+  "source": "https://github.com/anthropics/claude-code/tree/main/plugins/ralph-wiggum"
+}
