@@ -4,11 +4,10 @@
   "lastSnapshot": "2026-02-05",
   "autoSnapshot": true,
   "codemaps": {
-    "lastScan": "2026-02-05T01:15:00Z",
+    "lastScan": "2026-05-23T00:00:00Z",
     "files": {
-      "architecture.md": { "lines": 28 },
-      "backend.md": { "lines": 52 },
-      "data.md": { "lines": 53 }
+      "architecture.md": { "lines": 26 },
+      "backend.md": { "lines": 46 }
     }
   }
 }

@@ -1,5 +1,5 @@
 # Backend Overview
-> Last scanned: 2026-02-05 01:15
+> Last scanned: 2026-05-23 00:00
 
 ## CLI Module (src/cli/)
 src/cli/
@@ -14,31 +14,29 @@ src/cli/
       |- hire.ts           # agent-hub hire <name>
       |- hire.test.ts
 
-## Server Module (src/server/)
-src/server/
-  |- index.ts              # MCP server setup
-  |- tools/
-      |- index.ts          # Tool registration
-      |- search.ts         # memory_search tool
-      |- get.ts            # memory_get tool
-      |- status.ts         # memory_status tool
-
 ## Agent Module (src/agent/)
 src/agent/
   |- index.ts              # Agent exports
   |- manager.ts            # Agent CRUD operations
-  |- types.ts              # Agent type definitions
-  |- paths.ts              # Path resolution
-  |- config-loader.ts      # Load agent configs
-  |- templates.ts          # Template management
-  |- promote.ts            # Agent promotion
-  |- sync.ts               # Sync operations
+  |- types.ts              # AgentMetadata, AgentRegistry
+  |- paths.ts              # Path resolution (agent dirs, memory dirs, project detection)
+  |- config-loader.ts      # Load plugins, MCP servers, hooks, skills, rules configs
+  |- templates.ts          # Default template generation for new agents
+  |- promote.ts            # Agent promotion (not implemented)
+  |- sync.ts               # Sync operations (skeleton)
 
 ## Targets Module (src/targets/)
 src/targets/
   |- index.ts              # Target exports
-  |- types.ts              # Target interfaces
-  |- claude.ts             # Claude Code target implementation
+  |- types.ts              # TargetAdapter interface, McpConfig, HireResult
+  |- claude.ts             # Claude Code adapter (MCP injection, hooks, settings)
 
-## External Dependencies
-@modelcontextprotocol/sdk, chokidar
+## Storage Module (src/storage/)
+src/storage/
+  |- index.ts              # Storage exports
+  |- atomic-reindex.ts     # Atomic SQLite operations with rollback
+
+## Utils Module (src/utils/)
+src/utils/
+  |- index.ts              # Utils exports
+  |- retry.ts              # retryAsync, runWithConcurrency, withTimeout
