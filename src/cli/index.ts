@@ -42,9 +42,6 @@ Examples:
   npx agent-hub agents
   npx agent-hub hire alice-fullstack
   npx agent-hub status alice-fullstack
-
-For MCP server mode (used by Claude Code):
-  npx agent-hub --agent <name>
 `;
 
 async function main() {
