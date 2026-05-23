@@ -1,0 +1,8 @@
+{
+  "name": "godot-rules",
+  "type": "rule",
+  "description": "Godot 4.4 coding standards — strict typing, scene organization, signals, naming conventions",
+  "version": "1.0.0",
+  "author": "BlueBirdBack",
+  "source": "https://github.com/BlueBirdBack/godot-cursorrules"
+}

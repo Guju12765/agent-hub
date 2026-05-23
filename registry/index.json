@@ -23,5 +23,25 @@
     "name": "ralph-loop",
     "type": "dependency",
     "description": "Ralph Wiggum technique — continuous self-referential AI loops for iterative development"
+  },
+  {
+    "name": "godot-mcp",
+    "type": "dependency",
+    "description": "MCP server for Godot — launch editor, run projects, manage scenes, capture debug output"
+  },
+  {
+    "name": "godot-docs-mcp",
+    "type": "dependency",
+    "description": "MCP server serving complete Godot documentation to AI — reduces hallucination"
+  },
+  {
+    "name": "godot-prompter",
+    "type": "dependency",
+    "description": "45 domain skills for Godot 4.x — physics, shaders, UI, multiplayer, animation, and more"
+  },
+  {
+    "name": "godot-rules",
+    "type": "rule",
+    "description": "Godot 4.4 coding standards — strict typing, scene organization, signals, naming conventions"
   }
 ]

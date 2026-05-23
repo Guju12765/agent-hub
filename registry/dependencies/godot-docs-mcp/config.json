@@ -1,0 +1,8 @@
+{
+  "install": "git clone https://github.com/Nihilantropy/godot-mcp-docs.git ~/.agent-hub/tools/godot-mcp-docs && docker build -f ~/.agent-hub/tools/godot-mcp-docs/deploy/Dockerfile -t godot-mcp-docs:local ~/.agent-hub/tools/godot-mcp-docs",
+  "mcp": {
+    "command": "docker",
+    "args": ["run", "--rm", "-i", "godot-mcp-docs:local"]
+  },
+  "source": "https://github.com/Nihilantropy/godot-mcp-docs"
+}

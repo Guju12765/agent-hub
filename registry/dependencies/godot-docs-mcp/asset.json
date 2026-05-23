@@ -1,0 +1,8 @@
+{
+  "name": "godot-docs-mcp",
+  "type": "dependency",
+  "description": "MCP server serving complete Godot documentation to AI — reduces hallucination",
+  "version": "1.0.0",
+  "author": "Nihilantropy",
+  "source": "https://github.com/Nihilantropy/godot-mcp-docs"
+}

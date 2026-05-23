@@ -1,0 +1,8 @@
+{
+  "name": "godot-mcp",
+  "type": "dependency",
+  "description": "MCP server for Godot — launch editor, run projects, manage scenes, capture debug output",
+  "version": "1.0.0",
+  "author": "Coding-Solo",
+  "source": "https://github.com/Coding-Solo/godot-mcp"
+}
