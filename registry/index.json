@@ -17,11 +17,11 @@
   {
     "name": "grillme",
     "type": "dependency",
-    "description": "Socratic deep interview skill — structured questioning to extract the full picture on any topic"
+    "description": "Interview skill — stress-test plans and designs through relentless questioning"
   },
   {
     "name": "ralph-loop",
     "type": "dependency",
-    "description": "Autonomous AI agent loop — runs coding tools repeatedly until all PRD items are complete"
+    "description": "Ralph Wiggum technique — continuous self-referential AI loops for iterative development"
   }
 ]

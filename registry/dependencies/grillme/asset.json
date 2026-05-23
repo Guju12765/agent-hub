@@ -1,7 +1,7 @@
 {
   "name": "grillme",
   "type": "dependency",
-  "description": "Socratic deep interview skill — structured questioning to extract the full picture on any topic",
+  "description": "Interview skill — stress-test plans and designs through relentless questioning",
   "version": "1.0.0",
-  "author": "Jekudy"
+  "author": "mattpocock"
 }
