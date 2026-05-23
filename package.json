@@ -8,8 +8,7 @@
     "agent-hub": "dist/index.js"
   },
   "scripts": {
-    "build": "tsc && npm run copy-templates",
-    "copy-templates": "node -e \"const fs=require('fs');const path=require('path');function cpR(s,d){fs.mkdirSync(d,{recursive:true});fs.readdirSync(s,{withFileTypes:true}).forEach(e=>{const sp=path.join(s,e.name),dp=path.join(d,e.name);e.isDirectory()?cpR(sp,dp):fs.copyFileSync(sp,dp)})};cpR('src/templates','dist/templates')\"",
+    "build": "tsc",
     "start": "node dist/index.js",
     "dev": "tsx src/index.ts",
     "test": "vitest run",
@@ -26,19 +25,9 @@
     "claude"
   ],
   "license": "MIT",
-  "dependencies": {
-    "@modelcontextprotocol/sdk": "^1.0.0",
-    "better-sqlite3": "^11.0.0",
-    "chokidar": "^5.0.0",
-    "node-llama-cpp": "^3.15.1",
-    "openai": "^4.0.0",
-    "sqlite-vec": "^0.1.7-alpha.2",
-    "tar": "^7.5.7"
-  },
+  "dependencies": {},
   "devDependencies": {
-    "@types/better-sqlite3": "^7.6.0",
     "@types/node": "^20.0.0",
-    "@types/tar": "^6.1.13",
     "tsx": "^4.0.0",
     "typescript": "^5.0.0",
     "vitepress": "^1.6.4",

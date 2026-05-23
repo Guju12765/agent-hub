@@ -17,7 +17,7 @@ import {
   ensureAgentDirs,
   getIndexDbPath,
 } from "./paths.js";
-import { createDefaultTemplates } from "./templates.js";
+
 
 export interface CreateAgentOptions {
   specialty?: string;
@@ -55,8 +55,6 @@ export function createAgent(name: string, options: CreateAgentOptions = {}): Age
   // Create directories and files
   ensureAgentDirs(name);
   saveAgentMetadata(name, metadata);
-  createDefaultTemplates(name);
-
   // Add to registry
   const registry = loadRegistry();
   if (!registry.agents.includes(name)) {
