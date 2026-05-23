@@ -10,8 +10,8 @@
     "description": "Complete software development methodology — TDD, debugging, planning, code review, and more"
   },
   {
-    "name": "andrej-karpathy-skills",
-    "type": "dependency",
+    "name": "karpathy-guidelines",
+    "type": "claude-md",
     "description": "Behavioral guidelines from Andrej Karpathy — think before coding, simplicity first, surgical changes"
   },
   {
