@@ -1,0 +1,16 @@
+{
+  "hooks": {
+    "PreCompact": [
+      {
+        "matcher": "manual|auto",
+        "hooks": [
+          {
+            "type": "prompt",
+            "prompt": "[Memory] PreCompact triggered. Run /memory-summarization now to save session state, daily learnings, and durable memories before context is cleared."
+          }
+        ],
+        "description": "Prompt Claude to save memories before compaction"
+      }
+    ]
+  }
+}
