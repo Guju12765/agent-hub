@@ -1,0 +1,7 @@
+{
+  "name": "grillme",
+  "type": "dependency",
+  "description": "Socratic deep interview skill — structured questioning to extract the full picture on any topic",
+  "version": "1.0.0",
+  "author": "Jekudy"
+}

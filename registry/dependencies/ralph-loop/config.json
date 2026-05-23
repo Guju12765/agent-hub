@@ -1,0 +1,4 @@
+{
+  "install": "claude marketplace add https://github.com/snarktank/ralph.git && claude plugin install ralph-skills@ralph-marketplace",
+  "source": "https://github.com/snarktank/ralph"
+}

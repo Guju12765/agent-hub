@@ -1,0 +1,7 @@
+{
+  "name": "ralph-loop",
+  "type": "dependency",
+  "description": "Autonomous AI agent loop — runs coding tools repeatedly until all PRD items are complete",
+  "version": "1.0.0",
+  "author": "snarktank"
+}

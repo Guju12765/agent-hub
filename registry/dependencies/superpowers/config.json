@@ -1,0 +1,4 @@
+{
+  "install": "claude plugin install superpowers@claude-plugins-official",
+  "source": "https://github.com/obra/superpowers"
+}

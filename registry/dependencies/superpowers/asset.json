@@ -1,0 +1,7 @@
+{
+  "name": "superpowers",
+  "type": "dependency",
+  "description": "Complete software development methodology — TDD, debugging, planning, code review, and more",
+  "version": "4.1.1",
+  "author": "obra"
+}

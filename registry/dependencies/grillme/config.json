@@ -1,0 +1,4 @@
+{
+  "install": "claude marketplace add https://github.com/Jekudy/grillme-skill.git && claude plugin install grillme@grillme-marketplace",
+  "source": "https://github.com/Jekudy/grillme-skill"
+}
