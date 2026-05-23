@@ -1,42 +1,41 @@
 # Backend Overview
-> Last scanned: 2026-05-23 00:00
-
-## CLI Module (src/cli/)
-src/cli/
-  |- index.ts              # CLI entry, command routing
-  |- conflict-resolver.ts  # File conflict handling for hire
-  |- conflict-resolver.test.ts
-  |- commands/
-      |- create.ts         # agent-hub create <name>
-      |- agents.ts         # agent-hub agents (list)
-      |- delete.ts         # agent-hub delete <name>
-      |- status.ts         # agent-hub status [name]
-      |- hire.ts           # agent-hub hire <name>
-      |- hire.test.ts
+> Last scanned: 2026-05-23 12:00
 
 ## Agent Module (src/agent/)
 src/agent/
-  |- index.ts              # Agent exports
-  |- manager.ts            # Agent CRUD operations
-  |- types.ts              # AgentMetadata, AgentRegistry
-  |- paths.ts              # Path resolution (agent dirs, memory dirs, project detection)
-  |- config-loader.ts      # Load plugins, MCP servers, hooks, skills, rules configs
-  |- templates.ts          # Default template generation for new agents
-  |- promote.ts            # Agent promotion (not implemented)
-  |- sync.ts               # Sync operations (skeleton)
+  |- index.ts          # Re-exports types, paths, manager
+  |- types.ts          # AssetType, RegistryEntry, AgentManifest, DependencyConfig, GlobalConfig
+  |- paths.ts          # ~/.agent-hub/ path helpers (base, cache, agents, config)
+  |- manager.ts        # CRUD: createAgent, loadAgent, addAssets, removeAssets, deleteAgent, listAgents
+
+## CLI Module (src/cli/)
+src/cli/
+  |- index.ts          # Command router (7 commands), help text, version 0.2.0
+  |- commands/
+      |- list.ts       # agent-hub list — sync registry, display grouped assets
+      |- info.ts       # agent-hub info <name> — show asset details
+      |- create.ts     # agent-hub create <agent> [assets...]
+      |- add.ts        # agent-hub add <agent> [assets...]
+      |- remove.ts     # agent-hub remove <agent> [assets...]
+      |- agents.ts     # agent-hub agents — list local agents
+      |- deploy.ts     # agent-hub deploy <agent> — local or registry agent
+
+## Registry Module (src/registry/)
+src/registry/
+  |- index.ts          # Re-exports cache, fetch
+  |- cache.ts          # readCachedIndex, writeCachedIndex (JSON files)
+  |- fetch.ts          # resolveAssetPath, syncRegistry (git clone/pull), getAssetLocalPath
+  |- registry.test.ts  # 7 tests
+
+## Deploy Module (src/deploy/)
+src/deploy/
+  |- index.ts          # deployAgent orchestrator (recursive for nested agents)
+  |- copy.ts           # copyAssetToProject — skills→.claude/skills/, rules→.claude/rules/, claude-md→.claude/CLAUDE.md
+  |- dependencies.ts   # loadDependencyConfig, installDependency (with user prompt), toMcpEntry
+  |- deploy.test.ts    # 4 tests
 
 ## Targets Module (src/targets/)
 src/targets/
-  |- index.ts              # Target exports
-  |- types.ts              # TargetAdapter interface, McpConfig, HireResult
-  |- claude.ts             # Claude Code adapter (MCP injection, hooks, settings)
-
-## Storage Module (src/storage/)
-src/storage/
-  |- index.ts              # Storage exports
-  |- atomic-reindex.ts     # Atomic SQLite operations with rollback
-
-## Utils Module (src/utils/)
-src/utils/
-  |- index.ts              # Utils exports
-  |- retry.ts              # retryAsync, runWithConcurrency, withTimeout
+  |- index.ts          # Re-exports types, claude
+  |- types.ts          # TargetAdapter interface, McpServerEntry, DeployResult
+  |- claude.ts         # ClaudeAdapter — .claude/, .mcp.json, detect, injectMcp, removeMcp

@@ -1,30 +1,34 @@
 # Architecture Overview
-> Last scanned: 2026-05-23 00:00
+> Last scanned: 2026-05-23 12:00
 
 ## Project Type
-Node.js + TypeScript CLI tool for agent management
+Node.js + TypeScript CLI — AI Development Kit (zero runtime dependencies)
 
 ## Structure
 src/
-  |- agent/         # Agent lifecycle & config (8 files, ~888 lines)
-  |- cli/           # CLI commands & conflict resolution (9 files, ~1691 lines)
-  |- storage/       # Atomic SQLite operations (2 files, ~172 lines)
-  |- targets/       # Platform adapters (3 files, ~358 lines)
-  |- utils/         # Retry & concurrency helpers (2 files, ~269 lines)
-  |- index.ts       # Entry point (8 lines)
+  |- agent/           # Core types, paths, agent CRUD (4 files, ~200 lines)
+  |- cli/             # CLI entry + 7 command handlers (8 files, ~300 lines)
+  |- registry/        # Fetch & cache registry from GitHub (3 files + test, ~120 lines)
+  |- deploy/          # Copy assets to projects, wire deps (3 files + test, ~200 lines)
+  |- targets/         # Platform adapters (3 files, ~150 lines)
+  |- index.ts         # Entry point (8 lines)
 
-archive/            # Archived, no longer active
-  |- memory/        # Former memory system (embeddings, search, sync)
-  |- server/        # Former MCP server
-  |- core/config/   # Former memory config types
-  |- templates/     # Former default templates (skills, rules, commands)
+registry/             # Seed data for the asset registry repo
+  |- index.json       # Asset catalog
+  |- skills/          # Mirrored skill assets (docs-map)
+  |- dependencies/    # Pointers to external plugins (superpowers, grillme, etc.)
+
+archive/              # Archived code from pre-ADK era (not active)
 
 ## Entry Points
-- src/index.ts      # Routes to CLI
-- src/cli/index.ts  # CLI command router
+- src/index.ts        # Routes to CLI
+- src/cli/index.ts    # Command router (7 commands)
+
+## Data Flow
+Registry (GitHub) → ~/.agent-hub/cache/ → agent manifest → deploy to .claude/
 
 ## Key Dependencies
-better-sqlite3, chokidar
+None. Zero runtime deps. Uses Node built-ins (fs, path, https, child_process) + git.
 
 ## Related Codemaps
-- [Backend](backend.md) - CLI and agent module details
+- [Backend](backend.md) - Module details
