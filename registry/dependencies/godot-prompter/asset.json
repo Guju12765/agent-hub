@@ -1,0 +1,8 @@
+{
+  "name": "godot-prompter",
+  "type": "dependency",
+  "description": "45 domain skills for Godot 4.x — physics, shaders, UI, multiplayer, animation, and more",
+  "version": "1.0.0",
+  "author": "jame581",
+  "source": "https://github.com/jame581/GodotPrompter"
+}

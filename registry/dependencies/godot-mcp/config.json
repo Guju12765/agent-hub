@@ -1,0 +1,8 @@
+{
+  "install": "claude mcp add godot -- npx @coding-solo/godot-mcp",
+  "mcp": {
+    "command": "npx",
+    "args": ["@coding-solo/godot-mcp"]
+  },
+  "source": "https://github.com/Coding-Solo/godot-mcp"
+}
