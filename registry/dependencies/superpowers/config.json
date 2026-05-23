@@ -1,4 +1,4 @@
 {
-  "install": "claude plugin install superpowers@claude-plugins-official",
+  "install": "claude plugin install superpowers@claude-plugins-official --scope project",
   "source": "https://github.com/obra/superpowers"
 }

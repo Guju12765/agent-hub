@@ -1,4 +1,4 @@
 {
-  "install": "claude plugins marketplace add jame581/skillsmith && claude plugins install godot-prompter@skillsmith",
+  "install": "claude plugins marketplace add jame581/skillsmith && claude plugins install godot-prompter@skillsmith --scope project",
   "source": "https://github.com/jame581/GodotPrompter"
 }
