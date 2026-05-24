@@ -2,11 +2,11 @@
  * Deploy orchestration
  */
 
-import { existsSync, readFileSync } from "node:fs";
+import { existsSync, readFileSync, mkdirSync, copyFileSync } from "node:fs";
 import { join } from "node:path";
 import type { AgentManifest } from "../agent/types.js";
 import { readIndex } from "../registry/cache.js";
-import { getRegistryPath } from "../registry/fetch.js";
+import { getRegistryPath, resolveAssetPath } from "../registry/fetch.js";
 import { copyAssetToProject } from "./copy.js";
 import { loadDependencyConfig, installDependency, toMcpEntry } from "./dependencies.js";
 import { claudeAdapter } from "../targets/claude.js";
@@ -40,6 +40,19 @@ export async function deployAgent(manifest: AgentManifest, projectDir: string): 
         const mcpEntry = toMcpEntry(config);
         if (mcpEntry) {
           claudeAdapter.injectMcp(entry.name, mcpEntry);
+        }
+        // Copy bundled rule files to .claude/rules/
+        if (config.rules && config.rules.length > 0) {
+          const assetDir = join(registryPath, resolveAssetPath(entry));
+          const rulesDir = join(projectDir, ".claude", "rules");
+          mkdirSync(rulesDir, { recursive: true });
+          for (const ruleFile of config.rules) {
+            const src = join(assetDir, ruleFile);
+            if (existsSync(src)) {
+              copyFileSync(src, join(rulesDir, ruleFile));
+              console.log(`  Copied rule: ${ruleFile}`);
+            }
+          }
         }
         depsInstalled++;
       }

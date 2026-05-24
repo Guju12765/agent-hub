@@ -4,5 +4,6 @@
     "command": "docker",
     "args": ["run", "--rm", "-i", "godot-mcp-docs:local"]
   },
-  "source": "https://github.com/Nihilantropy/godot-mcp-docs"
+  "source": "https://github.com/Nihilantropy/godot-mcp-docs",
+  "rules": ["godot-docs-mcp.md"]
 }

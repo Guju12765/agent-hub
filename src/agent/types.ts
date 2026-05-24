@@ -38,4 +38,6 @@ export interface DependencyConfig {
     args?: string[];
     env?: Record<string, string>;
   };
+  /** Rule files bundled with this dependency, copied to .claude/rules/ on install */
+  rules?: string[];
 }
